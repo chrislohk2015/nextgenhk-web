@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nextgen Resources — Precious Metals Trading Hong Kong</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <span class="logo-mark">◈</span>
+        <span class="logo-text">NEXTGEN<em>RESOURCES</em></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#markets">Markets</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#contact" class="btn-nav">Open Account</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-tag">Hong Kong · Hung Hom, Kowloon</div>
+      <h1 class="hero-title">
+        An All-Rounded<br/>
+        <em>Precious Metal Trader</em>
+      </h1>
+      <p class="hero-sub">Assembled from professionals in jewellery, commercial banking, metal trading and auditing — making trades easy and seamless for clients across the globe.</p>
+      <div class="hero-cta">
+        <a href="#services" class="btn-primary">Explore Services</a>
+        <a href="#markets" class="btn-ghost">Live Prices →</a>
+      </div>
+    </div>
+    <div class="hero-ticker">
+      <div class="ticker-track" id="ticker">
+        <span class="tick"><span class="tick-name">XAU/USD</span><span class="tick-price" id="xau">3,342.50</span><span class="tick-change up">+0.42%</span></span>
+        <span class="tick"><span class="tick-name">XAG/USD</span><span class="tick-price" id="xag">32.18</span><span class="tick-change up">+0.87%</span></span>
+        <span class="tick"><span class="tick-name">XPT/USD</span><span class="tick-price" id="xpt">978.30</span><span class="tick-change down">−0.21%</span></span>
+        <span class="tick"><span class="tick-name">XPD/USD</span><span class="tick-price" id="xpd">1,024.60</span><span class="tick-change up">+1.14%</span></span>
+        <span class="tick"><span class="tick-name">HKD/USD</span><span class="tick-price">7.7842</span><span class="tick-change down">−0.01%</span></span>
+        <!-- duplicate for seamless loop -->
+        <span class="tick"><span class="tick-name">XAU/USD</span><span class="tick-price">3,342.50</span><span class="tick-change up">+0.42%</span></span>
+        <span class="tick"><span class="tick-name">XAG/USD</span><span class="tick-price">32.18</span><span class="tick-change up">+0.87%</span></span>
+        <span class="tick"><span class="tick-name">XPT/USD</span><span class="tick-price">978.30</span><span class="tick-change down">−0.21%</span></span>
+        <span class="tick"><span class="tick-name">XPD/USD</span><span class="tick-price">1,024.60</span><span class="tick-change up">+1.14%</span></span>
+        <span class="tick"><span class="tick-name">HKD/USD</span><span class="tick-price">7.7842</span><span class="tick-change down">−0.01%</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stats-inner">
+      <div class="stat" data-val="2">
+        <span class="stat-num"><span class="count">0</span> Offices</span>
+        <span class="stat-label">Hong Kong · Dubai</span>
+      </div>
+      <div class="stat" data-val="4">
+        <span class="stat-num"><span class="count">0</span> Sectors</span>
+        <span class="stat-label">Client Industries Served</span>
+      </div>
+      <div class="stat" data-val="5">
+        <span class="stat-num"><span class="count">0</span> Products</span>
+        <span class="stat-label">Physical Trading Range</span>
+      </div>
+      <div class="stat" data-val="24">
+        <span class="stat-num"><span class="count">0</span>/7</span>
+        <span class="stat-label">Global Market Coverage</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO BAND -->
+  <section class="photo-band">
+    <div class="photo-item">
+      <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&q=80" alt="Gold bullion bars" loading="lazy" />
+      <div class="photo-label">Physical Bullion</div>
+    </div>
+    <div class="photo-item">
+      <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" alt="Trading desk" loading="lazy" />
+      <div class="photo-label">Trading Desk</div>
+    </div>
+    <div class="photo-item">
+      <img src="Hong-Kong-Scenery.webp" alt="Hong Kong skyline" loading="lazy" />
+      <div class="photo-label">Hong Kong</div>
+    </div>
+    <div class="photo-item">
+      <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Dubai skyline" loading="lazy" />
+      <div class="photo-label">Dubai</div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">What We Do</span>
+        <h2>Comprehensive Metal<br/><em>Trading Products</em></h2>
+      </div>
+      <div class="services-grid">
+        <div class="service-card featured">
+          <div class="service-icon">◈</div>
+          <h3>Bullion Bars</h3>
+          <p>Direct trading of gold and silver bullion bars with competitive pricing and flexible settlement options for all client types.</p>
+          <ul>
+            <li>LBMA good delivery bars</li>
+            <li>Same-day settlement available</li>
+            <li>Competitive bid/ask spreads</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn more →</a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">⬡</div>
+          <h3>Coins & Collectibles</h3>
+          <p>Wide selection of investment-grade bullion coins and numismatic collectibles sourced from global mints.</p>
+          <ul>
+            <li>Gold & silver coins</li>
+            <li>Numismatic grading support</li>
+            <li>Buy-back programme</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn more →</a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">◇</div>
+          <h3>Semi-Refined & Doré</h3>
+          <p>Purchase and trading of semi-refined products and doré bars direct from miners and refiners worldwide.</p>
+          <ul>
+            <li>Transparent assay process</li>
+            <li>Direct miner relationships</li>
+            <li>Competitive doré pricing</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn more →</a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">△</div>
+          <h3>Scrap & Recycling</h3>
+          <p>Purchase of jewellery scrap, industrial scrap and electronic waste with on-site assay and same-day valuation.</p>
+          <ul>
+            <li>On-site assay services</li>
+            <li>Same-day valuation</li>
+            <li>Jewellery trade specialists</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn more →</a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">○</div>
+          <h3>Commodity Trading</h3>
+          <p>Serving commodity traders, exporters, importers and merchant traders with tailored metal supply solutions.</p>
+          <ul>
+            <li>Multi-disciplinary team</li>
+            <li>Cross-border facilitation</li>
+            <li>Strong banking support</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn more →</a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">⬟</div>
+          <h3>Multinational Coverage</h3>
+          <p>Offices in Hong Kong, Japan and Dubai enabling seamless cross-border transactions and global market access.</p>
+          <ul>
+            <li>HK · Japan · Dubai offices</li>
+            <li>Partnered banking network</li>
+            <li>Global customer base</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn more →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKETS / LIVE PRICES -->
+  <section class="markets" id="markets">
+    <div class="section-inner">
+      <div class="section-header light">
+        <span class="section-tag">Live Markets</span>
+        <h2>Today's Precious<br/><em>Metal Prices</em></h2>
+        <p class="section-note">Reference prices sourced from Wing Fung Precious Metals (永豐貴金屬). Contact our desk for firm quotes.</p>
+      </div>
+      <div class="prices-table">
+        <div class="price-row header">
+          <span>Metal</span>
+          <span>Bid</span>
+          <span>Ask</span>
+          <span>Change</span>
+          <span>24h Range</span>
+        </div>
+        <div class="price-row" data-metal="gold" data-wf="LLG">
+          <span class="metal-name"><span class="metal-dot gold"></span>London Gold (LLG)</span>
+          <span class="price-val" id="llg-bid">—</span>
+          <span class="price-val" id="llg-ask">—</span>
+          <span class="change" id="llg-chg">—</span>
+          <span class="range" id="llg-range">—</span>
+        </div>
+        <div class="price-row" data-metal="gold" data-wf="HKG">
+          <span class="metal-name"><span class="metal-dot gold"></span>HK Gold (HKG)</span>
+          <span class="price-val" id="hkg-bid">—</span>
+          <span class="price-val" id="hkg-ask">—</span>
+          <span class="change" id="hkg-chg">—</span>
+          <span class="range" id="hkg-range">—</span>
+        </div>
+        <div class="price-row" data-metal="silver">
+          <span class="metal-name"><span class="metal-dot silver"></span>London Silver (LLS)</span>
+          <span class="price-val" id="lls-bid">—</span>
+          <span class="price-val" id="lls-ask">—</span>
+          <span class="change" id="lls-chg">—</span>
+          <span class="range" id="lls-range">—</span>
+        </div>
+        <div class="price-row" data-metal="platinum">
+          <span class="metal-name"><span class="metal-dot platinum"></span>Platinum (PT)</span>
+          <span class="price-val" id="pt-bid">—</span>
+          <span class="price-val" id="pt-ask">—</span>
+          <span class="change" id="pt-chg">—</span>
+          <span class="range" id="pt-range">—</span>
+        </div>
+        <div class="price-row" data-metal="palladium">
+          <span class="metal-name"><span class="metal-dot palladium"></span>Palladium (PD)</span>
+          <span class="price-val" id="pd-bid">—</span>
+          <span class="price-val" id="pd-ask">—</span>
+          <span class="change" id="pd-chg">—</span>
+          <span class="range" id="pd-range">—</span>
+        </div>
+        <div class="price-row" data-metal="fx">
+          <span class="metal-name"><span class="metal-dot fx"></span>USD/HKD</span>
+          <span class="price-val" id="fx-bid">—</span>
+          <span class="price-val" id="fx-ask">—</span>
+          <span class="change" id="fx-chg">—</span>
+          <span class="range" id="fx-range">—</span>
+        </div>
+      </div>
+      <div class="price-footer">
+        <p class="price-disclaimer">Prices sourced from <a href="https://mq1.wfgold.com" target="_blank" rel="noopener">mq1.wfgold.com</a>. Last updated: <span id="last-update">—</span>. For reference only — all trades at Nextgen desk prices.</p>
+        <div class="price-status" id="price-status"><span class="status-dot"></span> Live</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why" id="about">
+    <div class="section-inner why-inner">
+      <div class="why-text">
+        <span class="section-tag">Why Nextgen Resources</span>
+        <h2>Young, Vibrant &<br/><em>Globally Connected</em></h2>
+        <p>Nextgen Resources Limited is an all-rounded precious metal trader assembled from a humble group of professionals with backgrounds in jewellery, commercial banking, metal trading and auditing. As a young but vibrant and energetic crew, we explore endless opportunities across the globe.</p>
+        <p>We operate our business in Hong Kong and, thanks to its position as an international hub, we strive to extend beyond geographical boundaries — with customers coming from around the globe and offices in Hong Kong and Dubai.</p>
+        <div class="badges">
+          <div class="badge">Hong Kong</div>
+          <div class="badge">Dubai</div>
+          <div class="badge">Global Reach</div>
+          <div class="badge">Multi-disciplinary</div>
+        </div>
+      </div>
+      <div class="why-right">
+        <div class="why-photo-grid">
+          <img src="https://images.unsplash.com/photo-1624365169198-38255ba54160?w=600&q=80" alt="Gold bars stacked" class="why-photo tall" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?w=600&q=80" alt="Financial trading" class="why-photo" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80" alt="Hong Kong finance district" class="why-photo" loading="lazy" />
+        </div>
+        <div class="why-pillars">
+          <div class="pillar">
+            <span class="pillar-num">01</span>
+            <h4>Multi-disciplinary Team</h4>
+            <p>Members from investment & commercial banking, accounting & auditing and jewellery fields provide extensive knowledge on trading options.</p>
+          </div>
+          <div class="pillar">
+            <span class="pillar-num">02</span>
+            <h4>Two Global Offices</h4>
+            <p>Offices in Hong Kong and Dubai with strong banking support from our network of partnered banks.</p>
+          </div>
+          <div class="pillar">
+            <span class="pillar-num">03</span>
+            <h4>Diversified Client Base</h4>
+            <p>Serving commodity traders, exporters, importers and merchant traders with tailored solutions for every need.</p>
+          </div>
+          <div class="pillar">
+            <span class="pillar-num">04</span>
+            <h4>Physical Trading</h4>
+            <p>Bullion bars, coins & collectibles, semi-refined products, doré and scrap — full-spectrum physical metal capabilities.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSIGHTS -->
+  <section class="insights">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">Market Insights</span>
+        <h2>Research &<br/><em>Commentary</em></h2>
+      </div>
+      <div class="insights-grid">
+        <article class="insight-card large">
+          <div class="insight-meta">Gold · April 2026</div>
+          <h3>Gold Breaks $3,300 as Fed Signals Prolonged Pause</h3>
+          <p>Safe-haven demand and central bank accumulation continue to drive gold to multi-year highs, with Asian buyers leading the charge.</p>
+          <a href="#" class="insight-link">Read Report →</a>
+        </article>
+        <article class="insight-card">
+          <div class="insight-meta">Silver · April 2026</div>
+          <h3>Industrial Demand Lifts Silver Outlook for H2 2026</h3>
+          <p>Solar panel manufacturing and EV battery demand are reshaping the silver supply-demand balance.</p>
+          <a href="#" class="insight-link">Read →</a>
+        </article>
+        <article class="insight-card">
+          <div class="insight-meta">Macro · March 2026</div>
+          <h3>HK as Asia's Precious Metals Hub: Regulatory Update</h3>
+          <p>Recent HKMA guidance on gold-backed instruments opens new avenues for institutional participation.</p>
+          <a href="#" class="insight-link">Read →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-inner contact-inner">
+      <div class="contact-text">
+        <span class="section-tag">Get in Touch</span>
+        <h2>Start Trading<br/><em>with Nextgen</em></h2>
+        <p>Whether you're a commodity trader, exporter, importer or merchant, our team is ready to discuss your requirements. We make trades easy and seamless.</p>
+        <div class="contact-details">
+          <div class="contact-item">
+            <span class="ci-label">Address</span>
+            <span>Workshop 4A, Unit O, 4/F Kaiser Estate Phase 3<br/>9-11A Hok Yuen Street, Hung Hom<br/>Kowloon, Hong Kong</span>
+          </div>
+          <div class="contact-item">
+            <span class="ci-label">Phone</span>
+            <span>+852 3957 2092</span>
+          </div>
+          <div class="contact-item">
+            <span class="ci-label">Email</span>
+            <span>info@nextgenhk.info</span>
+          </div>
+          <div class="contact-item">
+            <span class="ci-label">Office Hours</span>
+            <span>Mon–Fri 10:00–18:00 HKT</span>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" onsubmit="handleForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="John Smith" required />
+          </div>
+          <div class="form-group">
+            <label>Company</label>
+            <input type="text" placeholder="Your Company" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="john@company.com" required />
+        </div>
+        <div class="form-group">
+          <label>I am interested in</label>
+          <select>
+            <option>Spot Trading</option>
+            <option>Physical Delivery</option>
+            <option>Hedging & Derivatives</option>
+            <option>Scrap & Refining</option>
+            <option>Wealth Management</option>
+            <option>Corporate Treasury</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="4" placeholder="Tell us about your requirements..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary full">Send Enquiry</button>
+        <p class="form-note">By submitting you agree to our Privacy Policy. We respond within one business day.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-mark">◈</span>
+          <span class="logo-text">NEXTGEN<em>RESOURCES</em></span>
+        </a>
+        <p>An all-rounded precious metal trader making trades easy and seamless for clients across the globe.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Services</h5>
+          <a href="#">Spot Trading</a>
+          <a href="#">Physical Delivery</a>
+          <a href="#">Hedging</a>
+          <a href="#">Scrap & Refining</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a href="#">About Us</a>
+          <a href="#">Team</a>
+          <a href="#">Careers</a>
+          <a href="#">News</a>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Regulatory</a>
+          <a href="#">Risk Disclosure</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Nextgen Resources Limited. All rights reserved. Registered in Hong Kong. Workshop 4A, Unit O, 4/F Kaiser Estate Phase 3, 9-11A Hok Yuen Street, Hung Hom, Kowloon.</p>
+      <p class="disclaimer">Trading in precious metals involves significant risk. Past performance is not indicative of future results. This website does not constitute investment advice.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
