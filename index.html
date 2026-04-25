@@ -15,8 +15,7 @@
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="#" class="logo">
-        <span class="logo-mark">◈</span>
-        <span class="logo-text">NEXTGEN<em>RESOURCES</em></span>
+        <img src="NG_Logo.png" alt="Nextgen Resources" class="logo-img" />
       </a>
       <ul class="nav-links">
         <li><a href="#services">Services</a></li>
@@ -38,7 +37,7 @@
       <div class="hero-glow"></div>
     </div>
     <div class="hero-content">
-      <div class="hero-tag">Hong Kong · Hung Hom, Kowloon</div>
+      <div class="hero-tag">Hong Kong · BOUTIQUE BULLION TRADING HOUSE </div>
       <h1 class="hero-title">
         An All-Rounded<br/>
         <em>Precious Metal Trader</em>
@@ -47,21 +46,6 @@
       <div class="hero-cta">
         <a href="#services" class="btn-primary">Explore Services</a>
         <a href="#markets" class="btn-ghost">Live Prices →</a>
-      </div>
-    </div>
-    <div class="hero-ticker">
-      <div class="ticker-track" id="ticker">
-        <span class="tick"><span class="tick-name">XAU/USD</span><span class="tick-price" id="xau">3,342.50</span><span class="tick-change up">+0.42%</span></span>
-        <span class="tick"><span class="tick-name">XAG/USD</span><span class="tick-price" id="xag">32.18</span><span class="tick-change up">+0.87%</span></span>
-        <span class="tick"><span class="tick-name">XPT/USD</span><span class="tick-price" id="xpt">978.30</span><span class="tick-change down">−0.21%</span></span>
-        <span class="tick"><span class="tick-name">XPD/USD</span><span class="tick-price" id="xpd">1,024.60</span><span class="tick-change up">+1.14%</span></span>
-        <span class="tick"><span class="tick-name">HKD/USD</span><span class="tick-price">7.7842</span><span class="tick-change down">−0.01%</span></span>
-        <!-- duplicate for seamless loop -->
-        <span class="tick"><span class="tick-name">XAU/USD</span><span class="tick-price">3,342.50</span><span class="tick-change up">+0.42%</span></span>
-        <span class="tick"><span class="tick-name">XAG/USD</span><span class="tick-price">32.18</span><span class="tick-change up">+0.87%</span></span>
-        <span class="tick"><span class="tick-name">XPT/USD</span><span class="tick-price">978.30</span><span class="tick-change down">−0.21%</span></span>
-        <span class="tick"><span class="tick-name">XPD/USD</span><span class="tick-price">1,024.60</span><span class="tick-change up">+1.14%</span></span>
-        <span class="tick"><span class="tick-name">HKD/USD</span><span class="tick-price">7.7842</span><span class="tick-change down">−0.01%</span></span>
       </div>
     </div>
   </section>
@@ -140,12 +124,11 @@
         </div>
         <div class="service-card">
           <div class="service-icon">◇</div>
-          <h3>Semi-Refined & Doré</h3>
-          <p>Purchase and trading of semi-refined products and doré bars direct from miners and refiners worldwide.</p>
+          <h3>Semi-Refined</h3>
+          <p>Purchase and trading of semi-refined products from miners and refiners worldwide.</p>
           <ul>
             <li>Transparent assay process</li>
             <li>Direct miner relationships</li>
-            <li>Competitive doré pricing</li>
           </ul>
           <a href="#contact" class="service-link">Learn more →</a>
         </div>
@@ -174,9 +157,9 @@
         <div class="service-card">
           <div class="service-icon">⬟</div>
           <h3>Multinational Coverage</h3>
-          <p>Offices in Hong Kong, Japan and Dubai enabling seamless cross-border transactions and global market access.</p>
+          <p>Offices in Hong Kong and Dubai enabling seamless cross-border transactions and global market access.</p>
           <ul>
-            <li>HK · Japan · Dubai offices</li>
+            <li>HK · Dubai offices</li>
             <li>Partnered banking network</li>
             <li>Global customer base</li>
           </ul>
@@ -191,63 +174,33 @@
     <div class="section-inner">
       <div class="section-header light">
         <span class="section-tag">Live Markets</span>
-        <h2>Today's Precious<br/><em>Metal Prices</em></h2>
-        <p class="section-note">Reference prices sourced from Wing Fung Precious Metals (永豐貴金屬). Contact our desk for firm quotes.</p>
+        <h2>Live Precious<br/><em>Metal Prices</em></h2>
+        <p class="section-note">Real-time spot prices with historical data and technical analysis tools. Contact our desk for firm quotes.</p>
       </div>
-      <div class="prices-table">
-        <div class="price-row header">
-          <span>Metal</span>
-          <span>Bid</span>
-          <span>Ask</span>
-          <span>Change</span>
-          <span>24h Range</span>
+
+      <!-- LIVE PRICE CHARTS -->
+      <div class="price-charts">
+        <div class="charts-grid">
+          <div class="chart-widget">
+            <h4>🥇 Gold (XAU/USD)</h4>
+            <iframe src="https://ownx.com/prices/gold-xau/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
+          </div>
+          <div class="chart-widget">
+            <h4>🥈 Silver (XAG/USD)</h4>
+            <iframe src="https://ownx.com/prices/silver-xag/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
+          </div>
+          <div class="chart-widget">
+            <h4>⚪ Platinum (XPT/USD)</h4>
+            <iframe src="https://ownx.com/prices/platinum-xpt/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
+          </div>
+          <div class="chart-widget">
+            <h4>⚫ Palladium (XPD/USD)</h4>
+            <iframe src="https://ownx.com/prices/palladium-xpd/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
+          </div>
         </div>
-        <div class="price-row" data-metal="gold" data-wf="LLG">
-          <span class="metal-name"><span class="metal-dot gold"></span>London Gold (LLG)</span>
-          <span class="price-val" id="llg-bid">—</span>
-          <span class="price-val" id="llg-ask">—</span>
-          <span class="change" id="llg-chg">—</span>
-          <span class="range" id="llg-range">—</span>
-        </div>
-        <div class="price-row" data-metal="gold" data-wf="HKG">
-          <span class="metal-name"><span class="metal-dot gold"></span>HK Gold (HKG)</span>
-          <span class="price-val" id="hkg-bid">—</span>
-          <span class="price-val" id="hkg-ask">—</span>
-          <span class="change" id="hkg-chg">—</span>
-          <span class="range" id="hkg-range">—</span>
-        </div>
-        <div class="price-row" data-metal="silver">
-          <span class="metal-name"><span class="metal-dot silver"></span>London Silver (LLS)</span>
-          <span class="price-val" id="lls-bid">—</span>
-          <span class="price-val" id="lls-ask">—</span>
-          <span class="change" id="lls-chg">—</span>
-          <span class="range" id="lls-range">—</span>
-        </div>
-        <div class="price-row" data-metal="platinum">
-          <span class="metal-name"><span class="metal-dot platinum"></span>Platinum (PT)</span>
-          <span class="price-val" id="pt-bid">—</span>
-          <span class="price-val" id="pt-ask">—</span>
-          <span class="change" id="pt-chg">—</span>
-          <span class="range" id="pt-range">—</span>
-        </div>
-        <div class="price-row" data-metal="palladium">
-          <span class="metal-name"><span class="metal-dot palladium"></span>Palladium (PD)</span>
-          <span class="price-val" id="pd-bid">—</span>
-          <span class="price-val" id="pd-ask">—</span>
-          <span class="change" id="pd-chg">—</span>
-          <span class="range" id="pd-range">—</span>
-        </div>
-        <div class="price-row" data-metal="fx">
-          <span class="metal-name"><span class="metal-dot fx"></span>USD/HKD</span>
-          <span class="price-val" id="fx-bid">—</span>
-          <span class="price-val" id="fx-ask">—</span>
-          <span class="change" id="fx-chg">—</span>
-          <span class="range" id="fx-range">—</span>
-        </div>
-      </div>
-      <div class="price-footer">
-        <p class="price-disclaimer">Prices sourced from <a href="https://mq1.wfgold.com" target="_blank" rel="noopener">mq1.wfgold.com</a>. Last updated: <span id="last-update">—</span>. For reference only — all trades at Nextgen desk prices.</p>
-        <div class="price-status" id="price-status"><span class="status-dot"></span> Live</div>
+        <p style="text-align: center; margin-top: 30px; color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+          Live price data provided by <a href="https://ownx.com/" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.8);">OWNx</a> · For reference only — all trades at Nextgen desk prices
+        </p>
       </div>
     </div>
   </section>
@@ -304,26 +257,45 @@
     <div class="section-inner">
       <div class="section-header">
         <span class="section-tag">Market Insights</span>
-        <h2>Research &<br/><em>Commentary</em></h2>
+        <h2>Latest Precious<br/><em>Metals News</em></h2>
+        <p class="section-note">Stay informed with the latest market updates from leading industry sources</p>
       </div>
       <div class="insights-grid">
-        <article class="insight-card large">
-          <div class="insight-meta">Gold · April 2026</div>
-          <h3>Gold Breaks $3,300 as Fed Signals Prolonged Pause</h3>
-          <p>Safe-haven demand and central bank accumulation continue to drive gold to multi-year highs, with Asian buyers leading the charge.</p>
-          <a href="#" class="insight-link">Read Report →</a>
+        <article class="insight-card large news-source">
+          <div class="news-icon">◈</div>
+          <h3>Kitco News</h3>
+          <p>Breaking news, market analysis, and expert commentary on gold, silver, and precious metals markets worldwide.</p>
+          <a href="https://www.kitco.com/news/" target="_blank" rel="noopener" class="insight-link">Visit Kitco News →</a>
         </article>
-        <article class="insight-card">
-          <div class="insight-meta">Silver · April 2026</div>
-          <h3>Industrial Demand Lifts Silver Outlook for H2 2026</h3>
-          <p>Solar panel manufacturing and EV battery demand are reshaping the silver supply-demand balance.</p>
-          <a href="#" class="insight-link">Read →</a>
+        <article class="insight-card news-source">
+          <div class="news-icon">◇</div>
+          <h3>GoldPrice.org News</h3>
+          <p>Real-time gold prices and comprehensive market news covering global precious metals trading.</p>
+          <a href="https://goldprice.org/news" target="_blank" rel="noopener" class="insight-link">Read News →</a>
         </article>
-        <article class="insight-card">
-          <div class="insight-meta">Macro · March 2026</div>
-          <h3>HK as Asia's Precious Metals Hub: Regulatory Update</h3>
-          <p>Recent HKMA guidance on gold-backed instruments opens new avenues for institutional participation.</p>
-          <a href="#" class="insight-link">Read →</a>
+        <article class="insight-card news-source">
+          <div class="news-icon">⬡</div>
+          <h3>BullionVault Research</h3>
+          <p>In-depth market research, price analysis, and investment insights for precious metals traders.</p>
+          <a href="https://www.bullionvault.com/gold-news" target="_blank" rel="noopener" class="insight-link">View Research →</a>
+        </article>
+        <article class="insight-card news-source">
+          <div class="news-icon">△</div>
+          <h3>Investing.com</h3>
+          <p>Real-time commodities data, technical analysis, and breaking news for gold, silver, and precious metals.</p>
+          <a href="https://www.investing.com/commodities/gold" target="_blank" rel="noopener" class="insight-link">Visit Investing.com →</a>
+        </article>
+        <article class="insight-card news-source">
+          <div class="news-icon">○</div>
+          <h3>Bloomberg Metals</h3>
+          <p>Professional-grade market intelligence, price data, and analysis for precious metals markets.</p>
+          <a href="https://www.bloomberg.com/markets/commodities" target="_blank" rel="noopener" class="insight-link">Visit Bloomberg →</a>
+        </article>
+        <article class="insight-card news-source">
+          <div class="news-icon">⬟</div>
+          <h3>World Gold Council</h3>
+          <p>Authoritative research, market insights, and industry trends from the gold industry's leading authority.</p>
+          <a href="https://www.gold.org/goldhub" target="_blank" rel="noopener" class="insight-link">Explore WGC →</a>
         </article>
       </div>
     </div>
@@ -355,24 +327,24 @@
           </div>
         </div>
       </div>
-      <form class="contact-form" onsubmit="handleForm(event)">
+      <form class="contact-form" id="contactForm">
         <div class="form-row">
           <div class="form-group">
             <label>Full Name</label>
-            <input type="text" placeholder="John Smith" required />
+            <input type="text" name="name" id="name" placeholder="John Smith" required />
           </div>
           <div class="form-group">
             <label>Company</label>
-            <input type="text" placeholder="Your Company" />
+            <input type="text" name="company" id="company" placeholder="Your Company" />
           </div>
         </div>
         <div class="form-group">
           <label>Email</label>
-          <input type="email" placeholder="john@company.com" required />
+          <input type="email" name="email" id="email" placeholder="john@company.com" required />
         </div>
         <div class="form-group">
           <label>I am interested in</label>
-          <select>
+          <select name="interest" id="interest">
             <option>Spot Trading</option>
             <option>Physical Delivery</option>
             <option>Hedging & Derivatives</option>
@@ -383,10 +355,10 @@
         </div>
         <div class="form-group">
           <label>Message</label>
-          <textarea rows="4" placeholder="Tell us about your requirements..."></textarea>
+          <textarea name="message" id="message" rows="4" placeholder="Tell us about your requirements..."></textarea>
         </div>
         <button type="submit" class="btn-primary full">Send Enquiry</button>
-        <p class="form-note">By submitting you agree to our Privacy Policy. We respond within one business day.</p>
+        <p class="form-note">By submitting you agree to our <a href="privacy-policy.html" style="color: var(--gold);">Privacy Policy</a>. We respond within one business day.</p>
       </form>
     </div>
   </section>
@@ -396,8 +368,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="#" class="logo">
-          <span class="logo-mark">◈</span>
-          <span class="logo-text">NEXTGEN<em>RESOURCES</em></span>
+          <img src="NG_Logo.png" alt="Nextgen Resources" class="logo-img" />
         </a>
         <p>An all-rounded precious metal trader making trades easy and seamless for clients across the globe.</p>
       </div>
@@ -418,15 +389,12 @@
         </div>
         <div class="footer-col">
           <h5>Legal</h5>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Regulatory</a>
-          <a href="#">Risk Disclosure</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 Nextgen Resources Limited. All rights reserved. Registered in Hong Kong. Workshop 4A, Unit O, 4/F Kaiser Estate Phase 3, 9-11A Hok Yuen Street, Hung Hom, Kowloon.</p>
+      <p>© 2026 Nextgen Resources Limited. All rights reserved. Registered in Hong Kong. Workshop 4A, Unit O, 4/F Kaiser Estate Phase 3, 9-11A Hok Yuen Street, Hung Hom, Kowloon. DPMS Licence: A-B-23-06-00477</p>
       <p class="disclaimer">Trading in precious metals involves significant risk. Past performance is not indicative of future results. This website does not constitute investment advice.</p>
     </div>
   </footer>

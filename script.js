@@ -271,20 +271,56 @@ setInterval(fetchPrices, 5000);
 // ===== FORM =====
 function handleForm(e) {
   e.preventDefault();
-  const btn = e.target.querySelector('button[type="submit"]');
-  btn.textContent = 'Sending…';
+  
+  const form = e.target;
+  const name = form.querySelector('#name').value;
+  const company = form.querySelector('#company').value;
+  const email = form.querySelector('#email').value;
+  const interest = form.querySelector('#interest').value;
+  const message = form.querySelector('#message').value;
+  
+  // Build email body
+  const subject = `Enquiry from ${name}${company ? ' - ' + company : ''}`;
+  const body = `Name: ${name}
+${company ? 'Company: ' + company + '\n' : ''}Email: ${email}
+Interest: ${interest}
+
+Message:
+${message}
+
+---
+Sent from Nextgen Resources website contact form`;
+  
+  // Create mailto link
+  const mailtoLink = `mailto:info@nextgenhk.info?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  
+  // Open email client
+  window.location.href = mailtoLink;
+  
+  // Show success message
+  const btn = form.querySelector('button[type="submit"]');
+  const originalText = btn.textContent;
+  btn.textContent = 'Opening Email Client...';
   btn.disabled = true;
+  
   setTimeout(() => {
-    btn.textContent = 'Enquiry Sent ✓';
+    btn.textContent = 'Email Client Opened ✓';
     btn.style.background = '#4CAF7A';
     setTimeout(() => {
-      btn.textContent = 'Send Enquiry';
+      btn.textContent = originalText;
       btn.style.background = '';
       btn.disabled = false;
-      e.target.reset();
     }, 3000);
-  }, 1200);
+  }, 800);
 }
+
+// Attach form handler
+document.addEventListener('DOMContentLoaded', () => {
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', handleForm);
+  }
+});
 
 // ===== HAMBURGER =====
 const hamburger = document.getElementById('hamburger');
