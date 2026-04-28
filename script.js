@@ -269,32 +269,37 @@ fetchPrices();
 setInterval(fetchPrices, 5000);
 
 // ===== FORM (FormSubmit.co) =====
-async function handleForm(e) {
+// FormSubmit returns a 302 redirect which causes fetch() to fail with CORS errors.
+// Instead, we submit via a hidden iframe so the redirect happens silently.
+function handleForm(e) {
   e.preventDefault();
 
   const form = e.target;
   const btn = form.querySelector('button[type="submit"]');
   const originalText = btn.textContent;
 
-  // Disable button and show sending state
+  // Set dynamic subject
+  const name = form.querySelector('#name').value || '';
+  const company = form.querySelector('#company').value || '';
+  form.querySelector('[name="_subject"]').value =
+    `Enquiry from ${name}${company ? ' — ' + company : ''} via Nextgen Website`;
+
+  // Create a hidden iframe to receive the form submission
+  const iframeName = 'formsubmit_iframe_' + Date.now();
+  const iframe = document.createElement('iframe');
+  iframe.name = iframeName;
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  // Point the form at the iframe
+  form.target = iframeName;
+
+  // Show sending state
   btn.textContent = 'Sending…';
   btn.disabled = true;
 
-  try {
-    const formData = new FormData(form);
-    // Set a dynamic subject line with the sender's name
-    const name = formData.get('name') || '';
-    const company = formData.get('company') || '';
-    formData.set('_subject', `Enquiry from ${name}${company ? ' — ' + company : ''} via Nextgen Website`);
-
-    const res = await fetch(form.action, {
-      method: 'POST',
-      body: formData,
-      redirect: 'manual',
-    });
-
-    // FormSubmit returns 302 redirect on success; redirect:'manual' gives us an opaque-redirect (type 'opaqueredirect', status 0)
-    // A network error would throw, so reaching here means the POST succeeded
+  // Listen for iframe load (means FormSubmit processed it)
+  iframe.addEventListener('load', () => {
     btn.textContent = 'Sent Successfully ✓';
     btn.style.background = '#4CAF7A';
     form.reset();
@@ -303,16 +308,15 @@ async function handleForm(e) {
       btn.style.background = '';
       btn.disabled = false;
     }, 4000);
-  } catch (err) {
-    console.error('Form error:', err);
-    btn.textContent = 'Error — Please Try Again';
-    btn.style.background = '#E05555';
+    // Clean up iframe after a delay
     setTimeout(() => {
-      btn.textContent = originalText;
-      btn.style.background = '';
-      btn.disabled = false;
-    }, 4000);
-  }
+      iframe.remove();
+      form.removeAttribute('target');
+    }, 5000);
+  });
+
+  // Actually submit the form (into the hidden iframe)
+  form.submit();
 }
 
 // Attach form handler
