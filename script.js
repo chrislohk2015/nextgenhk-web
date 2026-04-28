@@ -268,50 +268,53 @@ applyPrices(SEED);
 fetchPrices();
 setInterval(fetchPrices, 5000);
 
-// ===== FORM =====
-function handleForm(e) {
+// ===== FORM (FormSubmit.co) =====
+async function handleForm(e) {
   e.preventDefault();
-  
+
   const form = e.target;
-  const name = form.querySelector('#name').value;
-  const company = form.querySelector('#company').value;
-  const email = form.querySelector('#email').value;
-  const interest = form.querySelector('#interest').value;
-  const message = form.querySelector('#message').value;
-  
-  // Build email body
-  const subject = `Enquiry from ${name}${company ? ' - ' + company : ''}`;
-  const body = `Name: ${name}
-${company ? 'Company: ' + company + '\n' : ''}Email: ${email}
-Interest: ${interest}
-
-Message:
-${message}
-
----
-Sent from Nextgen Resources website contact form`;
-  
-  // Create mailto link
-  const mailtoLink = `mailto:info@nextgenhk.info?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  
-  // Open email client
-  window.location.href = mailtoLink;
-  
-  // Show success message
   const btn = form.querySelector('button[type="submit"]');
   const originalText = btn.textContent;
-  btn.textContent = 'Opening Email Client...';
+
+  // Disable button and show sending state
+  btn.textContent = 'Sending…';
   btn.disabled = true;
-  
-  setTimeout(() => {
-    btn.textContent = 'Email Client Opened ✓';
-    btn.style.background = '#4CAF7A';
+
+  try {
+    const formData = new FormData(form);
+    // Set a dynamic subject line with the sender's name
+    const name = formData.get('name') || '';
+    const company = formData.get('company') || '';
+    formData.set('_subject', `Enquiry from ${name}${company ? ' — ' + company : ''} via Nextgen Website`);
+
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' },
+    });
+
+    if (res.ok) {
+      btn.textContent = 'Sent Successfully ✓';
+      btn.style.background = '#4CAF7A';
+      form.reset();
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 4000);
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch (err) {
+    console.error('Form error:', err);
+    btn.textContent = 'Error — Please Try Again';
+    btn.style.background = '#E05555';
     setTimeout(() => {
       btn.textContent = originalText;
       btn.style.background = '';
       btn.disabled = false;
-    }, 3000);
-  }, 800);
+    }, 4000);
+  }
 }
 
 // Attach form handler
