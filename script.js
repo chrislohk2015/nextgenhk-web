@@ -290,21 +290,17 @@ async function handleForm(e) {
     const res = await fetch(form.action, {
       method: 'POST',
       body: formData,
-      headers: { 'Accept': 'application/json' },
     });
 
-    if (res.ok) {
-      btn.textContent = 'Sent Successfully ✓';
-      btn.style.background = '#4CAF7A';
-      form.reset();
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.style.background = '';
-        btn.disabled = false;
-      }, 4000);
-    } else {
-      throw new Error('Submission failed');
-    }
+    // FormSubmit returns 200 on success (may be HTML or JSON)
+    btn.textContent = 'Sent Successfully ✓';
+    btn.style.background = '#4CAF7A';
+    form.reset();
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 4000);
   } catch (err) {
     console.error('Form error:', err);
     btn.textContent = 'Error — Please Try Again';
