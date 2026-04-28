@@ -290,9 +290,11 @@ async function handleForm(e) {
     const res = await fetch(form.action, {
       method: 'POST',
       body: formData,
+      redirect: 'manual',
     });
 
-    // FormSubmit returns 200 on success (may be HTML or JSON)
+    // FormSubmit returns 302 redirect on success; redirect:'manual' gives us an opaque-redirect (type 'opaqueredirect', status 0)
+    // A network error would throw, so reaching here means the POST succeeded
     btn.textContent = 'Sent Successfully ✓';
     btn.style.background = '#4CAF7A';
     form.reset();
