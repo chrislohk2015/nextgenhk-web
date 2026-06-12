@@ -3,13 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nextgen Resources — Precious Metals Trading Hong Kong</title>
+  <title>Nextgen Resources — Precious Metals Trading House · Hong Kong & Dubai</title>
+  <meta name="description" content="Nextgen Resources Limited is a boutique precious metals trading house in Hong Kong and Dubai — bullion bars, coins, semi-refined doré, scrap recycling and commodity trading." />
+  <meta property="og:title" content="Nextgen Resources — Precious Metals Trading House" />
+  <meta property="og:description" content="Physical bullion, doré and scrap trading from Hong Kong & Dubai. DPMS licensed. Trades made easy and seamless." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.nextgenhk.info/" />
+  <link rel="icon" type="image/png" href="NG_Logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- CURSOR (desktop) -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- SCROLL PROGRESS -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- LIVE TICKER -->
+  <div class="ticker" id="ticker">
+    <span class="ticker-live"><span class="status-dot"></span>LIVE</span>
+    <div class="ticker-scroll">
+      <span class="tick"><b>GOLD</b> XAU/USD <span class="tick-px" id="xau">—</span></span>
+      <span class="tick"><b>SILVER</b> XAG/USD <span class="tick-px" id="xag">—</span></span>
+      <span class="tick"><b>PLATINUM</b> XPT/USD <span class="tick-px" id="xpt">—</span></span>
+      <span class="tick"><b>PALLADIUM</b> XPD/USD <span class="tick-px" id="xpd">—</span></span>
+    </div>
+  </div>
 
   <!-- NAV -->
   <nav class="nav" id="nav">
@@ -17,78 +41,76 @@
       <a href="#" class="logo">
         <img src="NG_Logo.png" alt="Nextgen Resources" class="logo-img" />
       </a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="navLinks">
         <li><a href="#services">Services</a></li>
         <li><a href="#markets">Markets</a></li>
         <li><a href="#about">About</a></li>
+        <li><a href="#insights">Insights</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <a href="#contact" class="btn-nav">Open Account</a>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
+      <a href="#contact" class="btn-nav magnetic">Open Account</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
+  <header class="hero" id="top">
     <div class="hero-bg">
       <div class="hero-grid"></div>
       <div class="hero-glow"></div>
     </div>
+    <canvas id="heroCanvas" class="hero-canvas" aria-hidden="true"></canvas>
     <div class="hero-content">
-      <div class="hero-tag">Hong Kong · BOUTIQUE BULLION TRADING HOUSE </div>
-      <h1 class="hero-title">
-        An All-Rounded<br/>
-        <em>Precious Metal Trader</em>
+      <div class="hero-tag reveal-up">Hong Kong · Dubai — Boutique Bullion Trading House</div>
+      <h1 class="hero-title reveal-up d1">
+        Precious Metals,<br/>
+        <em>Traded with Precision</em>
       </h1>
-      <p class="hero-sub">Assembled from professionals in jewellery, commercial banking, metal trading and auditing — making trades easy and seamless for clients across the globe.</p>
-      <div class="hero-cta">
-        <a href="#services" class="btn-primary">Explore Services</a>
-        <a href="#markets" class="btn-ghost">Live Prices →</a>
+      <p class="hero-sub reveal-up d2">An all-rounded precious metal trader assembled from professionals in jewellery, commercial banking, metal trading and auditing — making trades easy and seamless for clients across the globe.</p>
+      <div class="hero-cta reveal-up d3">
+        <a href="#services" class="btn-primary magnetic">Explore Services</a>
+        <a href="#markets" class="btn-ghost magnetic">Live Prices <span class="arr">→</span></a>
       </div>
     </div>
-  </section>
+    <div class="hero-hint" id="heroHint"><span class="hint-icon">⟲</span> Drag to explore</div>
+    <div class="hero-scroll">
+      <span></span>
+    </div>
+  </header>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Gold</span><i>◆</i><span>Silver</span><i>◆</i><span>Platinum</span><i>◆</i><span>Palladium</span><i>◆</i><span>Bullion Bars</span><i>◆</i><span>Doré</span><i>◆</i><span>Coins</span><i>◆</i><span>Scrap Recycling</span><i>◆</i>
+      <span>Gold</span><i>◆</i><span>Silver</span><i>◆</i><span>Platinum</span><i>◆</i><span>Palladium</span><i>◆</i><span>Bullion Bars</span><i>◆</i><span>Doré</span><i>◆</i><span>Coins</span><i>◆</i><span>Scrap Recycling</span><i>◆</i>
+    </div>
+  </div>
 
   <!-- STATS -->
   <section class="stats">
     <div class="stats-inner">
       <div class="stat" data-val="2">
-        <span class="stat-num"><span class="count">0</span> Offices</span>
+        <span class="stat-num"><span class="count">0</span></span>
+        <span class="stat-unit">Offices</span>
         <span class="stat-label">Hong Kong · Dubai</span>
       </div>
       <div class="stat" data-val="4">
-        <span class="stat-num"><span class="count">0</span> Sectors</span>
-        <span class="stat-label">Client Industries Served</span>
+        <span class="stat-num"><span class="count">0</span></span>
+        <span class="stat-unit">Disciplines</span>
+        <span class="stat-label">Banking · Auditing · Jewellery · Trading</span>
       </div>
       <div class="stat" data-val="5">
-        <span class="stat-num"><span class="count">0</span> Products</span>
-        <span class="stat-label">Physical Trading Range</span>
+        <span class="stat-num"><span class="count">0</span></span>
+        <span class="stat-unit">Product Lines</span>
+        <span class="stat-label">Full Physical Trading Range</span>
       </div>
       <div class="stat" data-val="24">
-        <span class="stat-num"><span class="count">0</span>/7</span>
-        <span class="stat-label">Global Market Coverage</span>
+        <span class="stat-num"><span class="count">0</span><em>/7</em></span>
+        <span class="stat-unit">Coverage</span>
+        <span class="stat-label">Global Market Access</span>
       </div>
-    </div>
-  </section>
-
-  <!-- PHOTO BAND -->
-  <section class="photo-band">
-    <div class="photo-item">
-      <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&q=80" alt="Gold bullion bars" loading="lazy" />
-      <div class="photo-label">Physical Bullion</div>
-    </div>
-    <div class="photo-item">
-      <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" alt="Trading desk" loading="lazy" />
-      <div class="photo-label">Trading Desk</div>
-    </div>
-    <div class="photo-item">
-      <img src="Hong-Kong-Scenery.webp" alt="Hong Kong skyline" loading="lazy" />
-      <div class="photo-label">Hong Kong</div>
-    </div>
-    <div class="photo-item">
-      <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Dubai skyline" loading="lazy" />
-      <div class="photo-label">Dubai</div>
     </div>
   </section>
 
@@ -96,74 +118,81 @@
   <section class="services" id="services">
     <div class="section-inner">
       <div class="section-header">
-        <span class="section-tag">What We Do</span>
+        <span class="section-tag">01 — What We Do</span>
         <h2>Comprehensive Metal<br/><em>Trading Products</em></h2>
       </div>
       <div class="services-grid">
-        <div class="service-card featured">
+        <div class="service-card featured tilt">
+          <span class="service-num">01</span>
           <div class="service-icon">◈</div>
           <h3>Bullion Bars</h3>
-          <p>Direct trading of gold and silver bullion bars with competitive pricing and flexible settlement options for all client types.</p>
+          <p>Direct trading of gold and silver bullion bars with competitive pricing and flexible settlement for institutional and private clients.</p>
           <ul>
             <li>LBMA good delivery bars</li>
             <li>Same-day settlement available</li>
             <li>Competitive bid/ask spreads</li>
           </ul>
-          <a href="#contact" class="service-link">Learn more →</a>
+          <a href="#contact" class="service-link">Enquire <span class="arr">→</span></a>
         </div>
-        <div class="service-card">
+        <div class="service-card tilt">
+          <span class="service-num">02</span>
           <div class="service-icon">⬡</div>
-          <h3>Coins & Collectibles</h3>
-          <p>Wide selection of investment-grade bullion coins and numismatic collectibles sourced from global mints.</p>
+          <h3>Coins &amp; Collectibles</h3>
+          <p>Investment-grade bullion coins and numismatic collectibles sourced from leading mints worldwide.</p>
           <ul>
-            <li>Gold & silver coins</li>
+            <li>Gold &amp; silver coins</li>
             <li>Numismatic grading support</li>
             <li>Buy-back programme</li>
           </ul>
-          <a href="#contact" class="service-link">Learn more →</a>
+          <a href="#contact" class="service-link">Enquire <span class="arr">→</span></a>
         </div>
-        <div class="service-card">
+        <div class="service-card tilt">
+          <span class="service-num">03</span>
           <div class="service-icon">◇</div>
-          <h3>Semi-Refined</h3>
-          <p>Purchase and trading of semi-refined products from miners and refiners worldwide.</p>
+          <h3>Semi-Refined &amp; Doré</h3>
+          <p>Purchase and trading of semi-refined products and doré bars from miners and refiners worldwide.</p>
           <ul>
             <li>Transparent assay process</li>
             <li>Direct miner relationships</li>
+            <li>Refinery partnerships</li>
           </ul>
-          <a href="#contact" class="service-link">Learn more →</a>
+          <a href="#contact" class="service-link">Enquire <span class="arr">→</span></a>
         </div>
-        <div class="service-card">
+        <div class="service-card tilt">
+          <span class="service-num">04</span>
           <div class="service-icon">△</div>
-          <h3>Scrap & Recycling</h3>
+          <h3>Scrap &amp; Recycling</h3>
           <p>Purchase of jewellery scrap, industrial scrap and electronic waste with on-site assay and same-day valuation.</p>
           <ul>
             <li>On-site assay services</li>
             <li>Same-day valuation</li>
             <li>Jewellery trade specialists</li>
           </ul>
-          <a href="#contact" class="service-link">Learn more →</a>
+          <a href="#contact" class="service-link">Enquire <span class="arr">→</span></a>
         </div>
-        <div class="service-card">
+        <div class="service-card tilt">
+          <span class="service-num">05</span>
           <div class="service-icon">○</div>
           <h3>Commodity Trading</h3>
-          <p>Serving commodity traders, exporters, importers and merchant traders with tailored metal supply solutions.</p>
+          <p>Tailored metal supply solutions for commodity traders, exporters, importers and merchant traders.</p>
           <ul>
             <li>Multi-disciplinary team</li>
             <li>Cross-border facilitation</li>
             <li>Strong banking support</li>
           </ul>
-          <a href="#contact" class="service-link">Learn more →</a>
+          <a href="#contact" class="service-link">Enquire <span class="arr">→</span></a>
         </div>
-        <div class="service-card">
+        <div class="service-card tilt">
+          <span class="service-num">06</span>
           <div class="service-icon">⬟</div>
           <h3>Multinational Coverage</h3>
           <p>Offices in Hong Kong and Dubai enabling seamless cross-border transactions and global market access.</p>
           <ul>
-            <li>HK · Dubai offices</li>
+            <li>HK · Dubai trading desks</li>
             <li>Partnered banking network</li>
             <li>Global customer base</li>
           </ul>
-          <a href="#contact" class="service-link">Learn more →</a>
+          <a href="#contact" class="service-link">Enquire <span class="arr">→</span></a>
         </div>
       </div>
     </div>
@@ -173,34 +202,70 @@
   <section class="markets" id="markets">
     <div class="section-inner">
       <div class="section-header light">
-        <span class="section-tag">Live Markets</span>
+        <span class="section-tag">02 — Live Markets</span>
         <h2>Live Precious<br/><em>Metal Prices</em></h2>
-        <p class="section-note">Real-time spot prices with historical data and technical analysis tools. Contact our desk for firm quotes.</p>
+        <p class="section-note">Indicative spot prices, refreshed continuously. Contact our desk for firm, dealable quotes.</p>
       </div>
 
-      <!-- LIVE PRICE CHARTS -->
-      <div class="price-charts">
-        <div class="charts-grid">
-          <div class="chart-widget">
-            <h4>🥇 Gold (XAU/USD)</h4>
-            <iframe src="https://ownx.com/prices/gold-xau/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
-          </div>
-          <div class="chart-widget">
-            <h4>🥈 Silver (XAG/USD)</h4>
-            <iframe src="https://ownx.com/prices/silver-xag/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
-          </div>
-          <div class="chart-widget">
-            <h4>⚪ Platinum (XPT/USD)</h4>
-            <iframe src="https://ownx.com/prices/platinum-xpt/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
-          </div>
-          <div class="chart-widget">
-            <h4>⚫ Palladium (XPD/USD)</h4>
-            <iframe src="https://ownx.com/prices/palladium-xpd/?height=450" frameborder="0" style="border: none; width: 100%; height: 450px; overflow: hidden; border-radius: 8px;"></iframe>
+      <div class="price-board">
+        <div class="board-top">
+          <span class="board-status" id="price-status"><span class="status-dot"></span> Live</span>
+          <span class="board-updated">Last update <b id="last-update">—</b></span>
+        </div>
+        <div class="board-scroll">
+          <div class="price-table">
+            <div class="price-row header">
+              <span>Instrument</span>
+              <span>Bid</span>
+              <span>Ask</span>
+              <span>Change</span>
+              <span>Day Range</span>
+            </div>
+            <div class="price-row" data-metal="gold">
+              <span class="instrument"><b>Loco London Gold</b><small>XAU/USD · per oz</small></span>
+              <span class="px" id="llg-bid">—</span>
+              <span class="px" id="llg-ask">—</span>
+              <span class="change" id="llg-chg">—</span>
+              <span class="range" id="llg-range">—</span>
+            </div>
+            <div class="price-row" data-metal="gold">
+              <span class="instrument"><b>Hong Kong Gold</b><small>99 Tael Bar · HKD per tael</small></span>
+              <span class="px" id="hkg-bid">—</span>
+              <span class="px" id="hkg-ask">—</span>
+              <span class="change" id="hkg-chg">—</span>
+              <span class="range" id="hkg-range">—</span>
+            </div>
+            <div class="price-row" data-metal="silver">
+              <span class="instrument"><b>Loco London Silver</b><small>XAG/USD · per oz</small></span>
+              <span class="px" id="lls-bid">—</span>
+              <span class="px" id="lls-ask">—</span>
+              <span class="change" id="lls-chg">—</span>
+              <span class="range" id="lls-range">—</span>
+            </div>
+            <div class="price-row" data-metal="platinum">
+              <span class="instrument"><b>Platinum</b><small>XPT/USD · per oz</small></span>
+              <span class="px" id="pt-bid">—</span>
+              <span class="px" id="pt-ask">—</span>
+              <span class="change" id="pt-chg">—</span>
+              <span class="range" id="pt-range">—</span>
+            </div>
+            <div class="price-row" data-metal="palladium">
+              <span class="instrument"><b>Palladium</b><small>XPD/USD · per oz</small></span>
+              <span class="px" id="pd-bid">—</span>
+              <span class="px" id="pd-ask">—</span>
+              <span class="change" id="pd-chg">—</span>
+              <span class="range" id="pd-range">—</span>
+            </div>
+            <div class="price-row" data-metal="fx">
+              <span class="instrument"><b>USD / HKD</b><small>Spot FX reference</small></span>
+              <span class="px" id="fx-bid">—</span>
+              <span class="px" id="fx-ask">—</span>
+              <span class="change" id="fx-chg">—</span>
+              <span class="range" id="fx-range">—</span>
+            </div>
           </div>
         </div>
-        <p style="text-align: center; margin-top: 30px; color: rgba(255,255,255,0.6); font-size: 0.9rem;">
-          Live price data provided by <a href="https://ownx.com/" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.8);">OWNx</a> · For reference only — all trades at Nextgen desk prices
-        </p>
+        <p class="board-note">Prices are indicative and for reference only — all trades are executed at Nextgen desk prices.</p>
       </div>
     </div>
   </section>
@@ -209,14 +274,14 @@
   <section class="why" id="about">
     <div class="section-inner why-inner">
       <div class="why-text">
-        <span class="section-tag">Why Nextgen Resources</span>
-        <h2>Young, Vibrant &<br/><em>Globally Connected</em></h2>
+        <span class="section-tag">03 — Why Nextgen Resources</span>
+        <h2>Young, Vibrant &amp;<br/><em>Globally Connected</em></h2>
         <p>Nextgen Resources Limited is an all-rounded precious metal trader assembled from a humble group of professionals with backgrounds in jewellery, commercial banking, metal trading and auditing. As a young but vibrant and energetic crew, we explore endless opportunities across the globe.</p>
-        <p>We operate our business in Hong Kong and, thanks to its position as an international hub, we strive to extend beyond geographical boundaries — with customers coming from around the globe and offices in Hong Kong and Dubai.</p>
+        <p>We operate from Hong Kong — and thanks to its position as an international hub, we extend well beyond geographical boundaries, serving customers from around the world through our offices in Hong Kong and Dubai.</p>
         <div class="badges">
           <div class="badge">Hong Kong</div>
           <div class="badge">Dubai</div>
-          <div class="badge">Global Reach</div>
+          <div class="badge">DPMS Licensed</div>
           <div class="badge">Multi-disciplinary</div>
         </div>
       </div>
@@ -224,28 +289,28 @@
         <div class="why-photo-grid">
           <img src="https://images.unsplash.com/photo-1624365169198-38255ba54160?w=600&q=80" alt="Gold bars stacked" class="why-photo tall" loading="lazy" />
           <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?w=600&q=80" alt="Financial trading" class="why-photo" loading="lazy" />
-          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80" alt="Hong Kong finance district" class="why-photo" loading="lazy" />
+          <img src="Hong-Kong-Scenery.webp" alt="Hong Kong skyline" class="why-photo" loading="lazy" />
         </div>
         <div class="why-pillars">
           <div class="pillar">
             <span class="pillar-num">01</span>
             <h4>Multi-disciplinary Team</h4>
-            <p>Members from investment & commercial banking, accounting & auditing and jewellery fields provide extensive knowledge on trading options.</p>
+            <p>Professionals from investment &amp; commercial banking, accounting &amp; auditing and the jewellery trade bring depth to every transaction.</p>
           </div>
           <div class="pillar">
             <span class="pillar-num">02</span>
             <h4>Two Global Offices</h4>
-            <p>Offices in Hong Kong and Dubai with strong banking support from our network of partnered banks.</p>
+            <p>Trading desks in Hong Kong and Dubai, backed by a strong network of partnered banks.</p>
           </div>
           <div class="pillar">
             <span class="pillar-num">03</span>
             <h4>Diversified Client Base</h4>
-            <p>Serving commodity traders, exporters, importers and merchant traders with tailored solutions for every need.</p>
+            <p>Commodity traders, exporters, importers and merchants — each served with solutions tailored to their flow.</p>
           </div>
           <div class="pillar">
             <span class="pillar-num">04</span>
-            <h4>Physical Trading</h4>
-            <p>Bullion bars, coins & collectibles, semi-refined products, doré and scrap — full-spectrum physical metal capabilities.</p>
+            <h4>Full Physical Capability</h4>
+            <p>Bullion bars, coins &amp; collectibles, semi-refined products, doré and scrap — the complete physical metal spectrum.</p>
           </div>
         </div>
       </div>
@@ -253,49 +318,49 @@
   </section>
 
   <!-- INSIGHTS -->
-  <section class="insights">
+  <section class="insights" id="insights">
     <div class="section-inner">
       <div class="section-header">
-        <span class="section-tag">Market Insights</span>
+        <span class="section-tag">04 — Market Insights</span>
         <h2>Latest Precious<br/><em>Metals News</em></h2>
-        <p class="section-note">Stay informed with the latest market updates from leading industry sources</p>
+        <p class="section-note">Stay informed with market updates from leading industry sources.</p>
       </div>
       <div class="insights-grid">
-        <article class="insight-card large news-source">
+        <article class="insight-card large tilt">
           <div class="news-icon">◈</div>
           <h3>Kitco News</h3>
-          <p>Breaking news, market analysis, and expert commentary on gold, silver, and precious metals markets worldwide.</p>
-          <a href="https://www.kitco.com/news/" target="_blank" rel="noopener" class="insight-link">Visit Kitco News →</a>
+          <p>Breaking news, market analysis and expert commentary on gold, silver and precious metals markets worldwide.</p>
+          <a href="https://www.kitco.com/news/" target="_blank" rel="noopener" class="insight-link">Visit Kitco News <span class="arr">→</span></a>
         </article>
-        <article class="insight-card news-source">
+        <article class="insight-card tilt">
           <div class="news-icon">◇</div>
-          <h3>GoldPrice.org News</h3>
+          <h3>GoldPrice.org</h3>
           <p>Real-time gold prices and comprehensive market news covering global precious metals trading.</p>
-          <a href="https://goldprice.org/news" target="_blank" rel="noopener" class="insight-link">Read News →</a>
+          <a href="https://goldprice.org/news" target="_blank" rel="noopener" class="insight-link">Read News <span class="arr">→</span></a>
         </article>
-        <article class="insight-card news-source">
+        <article class="insight-card tilt">
           <div class="news-icon">⬡</div>
           <h3>BullionVault Research</h3>
-          <p>In-depth market research, price analysis, and investment insights for precious metals traders.</p>
-          <a href="https://www.bullionvault.com/gold-news" target="_blank" rel="noopener" class="insight-link">View Research →</a>
+          <p>In-depth market research, price analysis and investment insights for precious metals traders.</p>
+          <a href="https://www.bullionvault.com/gold-news" target="_blank" rel="noopener" class="insight-link">View Research <span class="arr">→</span></a>
         </article>
-        <article class="insight-card news-source">
+        <article class="insight-card tilt">
           <div class="news-icon">△</div>
           <h3>Investing.com</h3>
-          <p>Real-time commodities data, technical analysis, and breaking news for gold, silver, and precious metals.</p>
-          <a href="https://www.investing.com/commodities/gold" target="_blank" rel="noopener" class="insight-link">Visit Investing.com →</a>
+          <p>Real-time commodities data, technical analysis and breaking news for gold, silver and precious metals.</p>
+          <a href="https://www.investing.com/commodities/gold" target="_blank" rel="noopener" class="insight-link">Visit Investing.com <span class="arr">→</span></a>
         </article>
-        <article class="insight-card news-source">
+        <article class="insight-card tilt">
           <div class="news-icon">○</div>
           <h3>Bloomberg Metals</h3>
-          <p>Professional-grade market intelligence, price data, and analysis for precious metals markets.</p>
-          <a href="https://www.bloomberg.com/markets/commodities" target="_blank" rel="noopener" class="insight-link">Visit Bloomberg →</a>
+          <p>Professional-grade market intelligence, price data and analysis for precious metals markets.</p>
+          <a href="https://www.bloomberg.com/markets/commodities" target="_blank" rel="noopener" class="insight-link">Visit Bloomberg <span class="arr">→</span></a>
         </article>
-        <article class="insight-card news-source">
+        <article class="insight-card tilt">
           <div class="news-icon">⬟</div>
           <h3>World Gold Council</h3>
-          <p>Authoritative research, market insights, and industry trends from the gold industry's leading authority.</p>
-          <a href="https://www.gold.org/goldhub" target="_blank" rel="noopener" class="insight-link">Explore WGC →</a>
+          <p>Authoritative research, market insights and industry trends from the gold industry's leading authority.</p>
+          <a href="https://www.gold.org/goldhub" target="_blank" rel="noopener" class="insight-link">Explore WGC <span class="arr">→</span></a>
         </article>
       </div>
     </div>
@@ -305,7 +370,7 @@
   <section class="contact" id="contact">
     <div class="section-inner contact-inner">
       <div class="contact-text">
-        <span class="section-tag">Get in Touch</span>
+        <span class="section-tag">05 — Get in Touch</span>
         <h2>Start Trading<br/><em>with Nextgen</em></h2>
         <p>Whether you're a commodity trader, exporter, importer or merchant, our team is ready to discuss your requirements. We make trades easy and seamless.</p>
         <div class="contact-details">
@@ -315,11 +380,11 @@
           </div>
           <div class="contact-item">
             <span class="ci-label">Phone</span>
-            <span>+852 3957 2092</span>
+            <span><a href="tel:+85239572092" class="ci-link">+852 3957 2092</a></span>
           </div>
           <div class="contact-item">
             <span class="ci-label">Email</span>
-            <span>info@nextgenhk.info</span>
+            <span><a href="mailto:info@nextgenhk.info" class="ci-link">info@nextgenhk.info</a></span>
           </div>
           <div class="contact-item">
             <span class="ci-label">Office Hours</span>
@@ -337,35 +402,35 @@
         <input type="text" name="_honey" style="display:none" />
         <div class="form-row">
           <div class="form-group">
-            <label>Full Name</label>
+            <label for="name">Full Name</label>
             <input type="text" name="name" id="name" placeholder="John Smith" required />
           </div>
           <div class="form-group">
-            <label>Company</label>
+            <label for="company">Company</label>
             <input type="text" name="company" id="company" placeholder="Your Company" />
           </div>
         </div>
         <div class="form-group">
-          <label>Email</label>
+          <label for="email">Email</label>
           <input type="email" name="email" id="email" placeholder="john@company.com" required />
         </div>
         <div class="form-group">
-          <label>I am interested in</label>
+          <label for="interest">I am interested in</label>
           <select name="interest" id="interest">
-            <option>Spot Trading</option>
-            <option>Physical Delivery</option>
-            <option>Hedging & Derivatives</option>
-            <option>Scrap & Refining</option>
-            <option>Wealth Management</option>
-            <option>Corporate Treasury</option>
+            <option>Bullion Bars</option>
+            <option>Coins &amp; Collectibles</option>
+            <option>Semi-Refined &amp; Doré</option>
+            <option>Scrap &amp; Recycling</option>
+            <option>Commodity Trading</option>
+            <option>Other</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Message</label>
+          <label for="message">Message</label>
           <textarea name="message" id="message" rows="4" placeholder="Tell us about your requirements..."></textarea>
         </div>
-        <button type="submit" class="btn-primary full">Send Enquiry</button>
-        <p class="form-note">By submitting you agree to our <a href="privacy-policy.html" style="color: var(--gold);">Privacy Policy</a>. We respond within one business day.</p>
+        <button type="submit" class="btn-primary full magnetic">Send Enquiry</button>
+        <p class="form-note">By submitting you agree to our <a href="privacy-policy.html">Privacy Policy</a>. We respond within one business day.</p>
       </form>
     </div>
   </section>
@@ -382,17 +447,17 @@
       <div class="footer-links">
         <div class="footer-col">
           <h5>Services</h5>
-          <a href="#">Spot Trading</a>
-          <a href="#">Physical Delivery</a>
-          <a href="#">Hedging</a>
-          <a href="#">Scrap & Refining</a>
+          <a href="#services">Bullion Bars</a>
+          <a href="#services">Coins &amp; Collectibles</a>
+          <a href="#services">Semi-Refined &amp; Doré</a>
+          <a href="#services">Scrap &amp; Recycling</a>
         </div>
         <div class="footer-col">
           <h5>Company</h5>
-          <a href="#">About Us</a>
-          <a href="#">Team</a>
-          <a href="#">Careers</a>
-          <a href="#">News</a>
+          <a href="#about">About Us</a>
+          <a href="#markets">Live Markets</a>
+          <a href="#insights">Insights</a>
+          <a href="#contact">Contact</a>
         </div>
         <div class="footer-col">
           <h5>Legal</h5>
@@ -406,6 +471,14 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three/three.module.min.js"
+    }
+  }
+  </script>
+  <script type="module" src="hero3d.js"></script>
 </body>
 </html>

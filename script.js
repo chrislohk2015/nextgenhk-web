@@ -1,8 +1,13 @@
 // ===== NAV SCROLL =====
 const nav = document.getElementById('nav');
+const progressBar = document.getElementById('progressBar');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
-});
+  if (progressBar) {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = max > 0 ? `${(window.scrollY / max) * 100}%` : '0%';
+  }
+}, { passive: true });
 
 // ===== COUNTER ANIMATION =====
 function animateCount(el, target, duration = 1800) {
@@ -28,17 +33,75 @@ document.querySelectorAll('.stat[data-val]').forEach(s => statsObs.observe(s));
 // ===== SCROLL REVEAL =====
 const revealObs = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
-    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80);
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      revealObs.unobserve(e.target);
+    }
   });
 }, { threshold: 0.1 });
-document.querySelectorAll('.service-card,.pillar,.insight-card,.price-row:not(.header),.stat,.photo-item').forEach(el => {
+document.querySelectorAll('.service-card,.pillar,.insight-card,.stat,.price-board,.contact-form,.contact-item,.why-photo').forEach(el => {
   el.classList.add('reveal');
   revealObs.observe(el);
 });
 
+// ===== CUSTOM CURSOR + MAGNETIC BUTTONS (fine pointers only) =====
+(() => {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  if (!dot || !ring) return;
+  document.body.classList.add('has-cursor');
+
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  window.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+  (function loop() {
+    rx += (mx - rx) * 0.16;
+    ry += (my - ry) * 0.16;
+    dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+    ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+    requestAnimationFrame(loop);
+  })();
+
+  document.querySelectorAll('a, button, .service-card, .insight-card').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('is-hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('is-hover'));
+  });
+
+  // magnetic pull on key buttons
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const r = btn.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      btn.style.transform = `translate(${dx * 0.18}px, ${dy * 0.18}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
+})();
+
+// ===== CARD SPOTLIGHT + TILT =====
+(() => {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  document.querySelectorAll('.tilt').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      card.style.setProperty('--mx', `${px * 100}%`);
+      card.style.setProperty('--my', `${py * 100}%`);
+      card.style.transform =
+        `perspective(900px) rotateX(${(0.5 - py) * 5}deg) rotateY(${(px - 0.5) * 5}deg) translateY(-3px)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+})();
+
 // ===== LIVE PRICES FROM mq1.wfgold.com =====
 // Prices are in HKD (港金 HKG) and USD (倫敦金 LLG)
-// We scrape the rendered page via allorigins CORS proxy every 5 seconds.
+// We scrape the rendered page via a CORS proxy every 5 seconds.
 
 // CORS proxies tried in order until one works
 // On localhost, try the local proxy server first (node proxy.js)
@@ -158,7 +221,7 @@ function calcChg(bidStr, code) {
 function flash(metal, dir) {
   document.querySelectorAll(`.price-row[data-metal="${metal}"]`).forEach(row => {
     row.style.transition = 'background 0.15s';
-    row.style.background = dir === 'up' ? 'rgba(76,175,122,0.1)' : 'rgba(224,85,85,0.1)';
+    row.style.background = dir === 'up' ? 'rgba(61,220,151,0.07)' : 'rgba(255,92,92,0.07)';
     setTimeout(() => { row.style.background = ''; }, 600);
   });
 }
@@ -301,7 +364,7 @@ function handleForm(e) {
   // Listen for iframe load (means FormSubmit processed it)
   iframe.addEventListener('load', () => {
     btn.textContent = 'Sent Successfully ✓';
-    btn.style.background = '#4CAF7A';
+    btn.style.background = '#3ddc97';
     form.reset();
     setTimeout(() => {
       btn.textContent = originalText;
@@ -329,13 +392,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== HAMBURGER =====
 const hamburger = document.getElementById('hamburger');
-if (hamburger) {
+const navLinks = document.getElementById('navLinks');
+if (hamburger && navLinks) {
   hamburger.addEventListener('click', () => {
-    const links  = document.querySelector('.nav-links');
-    const btnNav = document.querySelector('.btn-nav');
-    if (!links) return;
-    const open = links.style.display === 'flex';
-    links.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:absolute;top:68px;left:0;right:0;background:var(--dark-2);padding:20px 40px;gap:20px;border-bottom:1px solid var(--line)';
-    if (btnNav) btnNav.style.display = open ? '' : 'block';
+    const open = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', String(open));
   });
+  // Close menu after choosing a section
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }));
 }
