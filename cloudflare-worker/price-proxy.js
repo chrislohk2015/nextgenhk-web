@@ -24,6 +24,8 @@ const ALLOWED_HOSTS = new Set([
   'mq1.wfgold.com',
   'stooq.com',
   'forex-data-feed.swissquote.com',
+  'query1.finance.yahoo.com',
+  'open.er-api.com',
 ]);
 
 const QUOTE_CACHE_SECONDS = 10;    // edge cache for live quotes
@@ -31,11 +33,11 @@ const HISTORY_CACHE_SECONDS = 3600; // edge cache for previous-close lookups
 
 // Instrument map: site code → sources + decimals
 const INSTRUMENTS = {
-  'LLG':   { stooq: 'xauusd', sq: 'XAU/USD', dp: 1 },
-  'LLS':   { stooq: 'xagusd', sq: 'XAG/USD', dp: 3 },
-  'PT':    { stooq: 'xptusd', sq: 'XPT/USD', dp: 1 },
-  'PD':    { stooq: 'xpdusd', sq: 'XPD/USD', dp: 1 },
-  'UST/T': { stooq: 'usdhkd', sq: null,      dp: 4 },
+  'LLG':   { stooq: 'xauusd', sq: 'XAU/USD', yahoo: 'XAUUSD=X', dp: 1 },
+  'LLS':   { stooq: 'xagusd', sq: 'XAG/USD', yahoo: 'XAGUSD=X', dp: 3 },
+  'PT':    { stooq: 'xptusd', sq: 'XPT/USD', yahoo: 'XPTUSD=X', dp: 1 },
+  'PD':    { stooq: 'xpdusd', sq: 'XPD/USD', yahoo: 'XPDUSD=X', dp: 1 },
+  'UST/T': { stooq: 'usdhkd', sq: null,      yahoo: 'HKD=X',    dp: 4 },
 };
 
 // HK 99-tael gold derivation constants
@@ -133,18 +135,54 @@ export function parseSwissquote(jsonBody) {
   return null;
 }
 
+/* ---------------- Yahoo Finance chart meta (fallback) -----------------
+ * https://query1.finance.yahoo.com/v8/finance/chart/XAUUSD=X?range=1d&interval=1d
+ * The meta block carries last price, day high/low and previous close.
+ */
+export function parseYahoo(body) {
+  try {
+    const meta = JSON.parse(body)?.chart?.result?.[0]?.meta;
+    if (!meta) return null;
+    const n = (v) => (typeof v === 'number' && isFinite(v)) ? v : null;
+    return {
+      last: n(meta.regularMarketPrice),
+      high: n(meta.regularMarketDayHigh),
+      low:  n(meta.regularMarketDayLow),
+      prevClose: n(meta.chartPreviousClose ?? meta.previousClose),
+    };
+  } catch (_) { return null; }
+}
+
+/* open.er-api.com daily FX (last-resort for USD/HKD) */
+export function parseErApi(body) {
+  try {
+    const j = JSON.parse(body);
+    const r = j && j.rates && j.rates.HKD;
+    return (typeof r === 'number' && isFinite(r)) ? r : null;
+  } catch (_) { return null; }
+}
+
 const fix = (n, dp) => (n === null || n === undefined || isNaN(n)) ? undefined : n.toFixed(dp);
 
-/* Build one instrument's payload from its sources (all optional). */
-export function buildInstrument({ sq, st, prevClose, dp }) {
+/* Build one instrument's payload from its sources (all optional).
+ * Priority: Swissquote bid/ask > Stooq last > Yahoo last;
+ *           Stooq range/close > Yahoo range/prevClose. */
+export function buildInstrument({ sq, st, ya, prevClose, dp }) {
   const o = {};
-  const bid = sq ? sq.bid : (st ? st.last : null);
-  const ask = sq ? sq.ask : (st ? st.last : null);
+  const pick = (...vals) => {
+    for (const v of vals) if (v !== null && v !== undefined && !isNaN(v)) return v;
+    return null;
+  };
+  const bid = pick(sq && sq.bid, st && st.last, ya && ya.last);
+  const ask = pick(sq && sq.ask, st && st.last, ya && ya.last);
+  const high = pick(st && st.high, ya && ya.high);
+  const low = pick(st && st.low, ya && ya.low);
+  const close = pick(prevClose, ya && ya.prevClose);
   if (bid !== null) o.bid = fix(bid, dp);
   if (ask !== null) o.ask = fix(ask, dp);
-  if (st && st.high !== null) o.high = fix(st.high, dp);
-  if (st && st.low !== null) o.low = fix(st.low, dp);
-  if (prevClose !== null && prevClose !== undefined) o.close = fix(prevClose, dp);
+  if (high !== null) o.high = fix(high, dp);
+  if (low !== null) o.low = fix(low, dp);
+  if (close !== null) o.close = fix(close, dp);
   return o;
 }
 
@@ -170,7 +208,7 @@ async function handlePrices() {
   const codes = Object.keys(INSTRUMENTS);
   const stooqSyms = codes.map(c => INSTRUMENTS[c].stooq);
 
-  // Kick off everything in parallel; every branch is allowed to fail alone.
+  // Tier 1 (parallel): Swissquote bid/ask + Stooq quotes/history.
   const lightP = fetchText(
     `https://stooq.com/q/l/?s=${stooqSyms.join('+')}&f=sd2t2ohlcv&h&e=csv`,
     QUOTE_CACHE_SECONDS
@@ -187,7 +225,6 @@ async function handlePrices() {
       : Promise.resolve(null);
   }
 
-  // Previous close: last ~10 days of daily history per symbol (edge-cached 1h)
   const now = new Date();
   const d2 = now.toISOString().slice(0, 10).replace(/-/g, '');
   const d1 = new Date(now.getTime() - 10 * 86400e3).toISOString().slice(0, 10).replace(/-/g, '');
@@ -200,15 +237,42 @@ async function handlePrices() {
   }
 
   const light = await lightP;
-  const out = { _meta: { ts: now.toISOString(), source: 'swissquote+stooq' } };
+
+  // Tier 2: Yahoo chart meta for anything Stooq didn't cover (range, prev
+  // close, FX). Only fired for the gaps, in parallel.
+  const yaP = {};
+  for (const c of codes) {
+    const inst = INSTRUMENTS[c];
+    const st = light[inst.stooq];
+    const needYahoo = !st || st.high === null || st.low === null || !st.last;
+    yaP[c] = (needYahoo && inst.yahoo)
+      ? fetchText(
+          `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(inst.yahoo)}?range=1d&interval=1d`,
+          QUOTE_CACHE_SECONDS
+        ).then(parseYahoo).catch(() => null)
+      : Promise.resolve(null);
+  }
+
+  const out = { _meta: { ts: now.toISOString(), source: 'swissquote+stooq+yahoo' } };
 
   for (const c of codes) {
     const inst = INSTRUMENTS[c];
     const st = light[inst.stooq] || null;
     const sq = await sqP[c];
+    const ya = await yaP[c];
     const histCsv = await histP[c];
     const prevClose = histCsv ? parsePrevClose(histCsv, st ? st.date : null) : null;
-    out[c] = buildInstrument({ sq, st, prevClose, dp: inst.dp });
+    out[c] = buildInstrument({ sq, st, ya, prevClose, dp: inst.dp });
+  }
+
+  // Tier 3: if USD/HKD still has no price, use open.er-api.com's daily rate
+  // (HKD is pegged to USD, so a daily mid is fine for the derivation).
+  if (!out['UST/T'] || out['UST/T'].bid === undefined) {
+    const rate = await fetchText('https://open.er-api.com/v6/latest/USD', HISTORY_CACHE_SECONDS)
+      .then(parseErApi).catch(() => null);
+    if (rate !== null) {
+      out['UST/T'] = { ...(out['UST/T'] || {}), bid: rate.toFixed(4), ask: rate.toFixed(4) };
+    }
   }
 
   // Derived Hong Kong 99-tael gold
