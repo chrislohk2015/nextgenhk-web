@@ -363,14 +363,31 @@ fetchPrices();
 setInterval(fetchPrices, 5000);
 
 // ===== FORM (FormSubmit.co) =====
-// FormSubmit returns a 302 redirect which causes fetch() to fail with CORS errors.
-// Instead, we submit via a hidden iframe so the redirect happens silently.
+// Primary path: FormSubmit's /ajax/ endpoint — it supports CORS fetch and
+// returns real JSON success/failure, so we can show honest feedback (the
+// old hidden-iframe method reported "success" no matter what happened,
+// hiding activation notices and errors).
+// Fallback path: hidden-iframe submit, only if fetch itself cannot run.
+const FORMSUBMIT_AJAX = 'https://formsubmit.co/ajax/info@nextgenhk.info';
+
+function formStatusEl(form) {
+  let el = form.querySelector('.form-status');
+  if (!el) {
+    el = document.createElement('p');
+    el.className = 'form-status';
+    el.setAttribute('role', 'status');
+    form.querySelector('button[type="submit"]').insertAdjacentElement('beforebegin', el);
+  }
+  return el;
+}
+
 function handleForm(e) {
   e.preventDefault();
 
   const form = e.target;
   const btn = form.querySelector('button[type="submit"]');
   const originalText = btn.textContent;
+  const status = formStatusEl(form);
 
   // Set dynamic subject
   const name = form.querySelector('#name').value || '';
@@ -378,38 +395,82 @@ function handleForm(e) {
   form.querySelector('[name="_subject"]').value =
     `Enquiry from ${name}${company ? ' — ' + company : ''} via Nextgen Website`;
 
-  // Create a hidden iframe to receive the form submission
-  const iframeName = 'formsubmit_iframe_' + Date.now();
-  const iframe = document.createElement('iframe');
-  iframe.name = iframeName;
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-
-  // Point the form at the iframe
-  form.target = iframeName;
-
-  // Show sending state
   btn.textContent = 'Sending…';
   btn.disabled = true;
+  status.textContent = '';
+  status.className = 'form-status';
 
-  // Listen for iframe load (means FormSubmit processed it)
-  iframe.addEventListener('load', () => {
+  const succeed = (msg) => {
     btn.textContent = 'Sent Successfully ✓';
     btn.style.background = '#3ddc97';
+    status.textContent = msg || 'Thank you — we will respond within one business day.';
+    status.classList.add('ok');
     form.reset();
     setTimeout(() => {
       btn.textContent = originalText;
       btn.style.background = '';
       btn.disabled = false;
     }, 4000);
-    // Clean up iframe after a delay
+  };
+
+  const fail = (msg) => {
+    btn.textContent = 'Not Sent — Try Again';
+    btn.style.background = '';
+    btn.disabled = false;
+    status.textContent = (msg ? msg + ' — ' : '') +
+      'You can also email us directly at info@nextgenhk.info';
+    status.classList.add('err');
+    setTimeout(() => { btn.textContent = originalText; }, 6000);
+  };
+
+  fetch(FORMSUBMIT_AJAX, {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: new FormData(form),
+  })
+    .then(async (res) => {
+      let j = null;
+      try { j = await res.json(); } catch (_) {}
+      if (res.ok && j && String(j.success) === 'true') {
+        succeed(j.message);
+      } else {
+        console.warn('FormSubmit rejected:', res.status, j);
+        fail(j && j.message ? String(j.message) : `Send failed (HTTP ${res.status})`);
+      }
+    })
+    .catch((err) => {
+      // fetch/CORS-level failure — fall back to the hidden-iframe submit
+      console.warn('FormSubmit ajax failed, using iframe fallback:', err.message);
+      iframeSubmit(form, btn, originalText, status);
+    });
+}
+
+function iframeSubmit(form, btn, originalText, status) {
+  const iframeName = 'formsubmit_iframe_' + Date.now();
+  const iframe = document.createElement('iframe');
+  iframe.name = iframeName;
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  form.target = iframeName;
+
+  iframe.addEventListener('load', () => {
+    // We cannot read the cross-origin result, so be honest about it
+    btn.textContent = 'Sent ✓';
+    btn.style.background = '#3ddc97';
+    status.textContent = 'If you do not hear from us within one business day, please email info@nextgenhk.info directly.';
+    status.className = 'form-status ok';
+    form.reset();
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 4000);
     setTimeout(() => {
       iframe.remove();
       form.removeAttribute('target');
     }, 5000);
   });
 
-  // Actually submit the form (into the hidden iframe)
   form.submit();
 }
 

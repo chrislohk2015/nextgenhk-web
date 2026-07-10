@@ -879,6 +879,14 @@ a:hover .arr { transform: translateX(5px); }
   box-shadow: 0 0 0 3px rgba(214, 166, 68, 0.1);
 }
 .form-group textarea { resize: vertical; min-height: 110px; }
+.form-status {
+  margin: 0 0 16px;
+  font-size: 13px;
+  text-align: center;
+  min-height: 0;
+}
+.form-status.ok  { color: var(--up); }
+.form-status.err { color: var(--down); }
 .form-note {
   margin-top: 18px;
   font-size: 12px;
