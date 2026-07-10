@@ -20,24 +20,16 @@ const ALLOWED_HOSTS = new Set([
   'mq1.wfgold.com',      // WF Gold — Loco London + HK tael + Pt/Pd + USD/HKD
 ]);
 
-// Where the site is allowed to call this Worker from (CORS allowlist).
-// '*' also works, but pinning to your domains is tidier and safer.
-const ALLOWED_ORIGINS = [
-  'https://www.nextgenhk.info',
-  'https://nextgenhk.info',
-  'http://localhost:8000',
-  'http://127.0.0.1:8000',
-];
-
 const EDGE_CACHE_SECONDS = 15; // how long the edge holds each fetch
 
-function corsHeaders(origin) {
-  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+// The relayed data is public price information and the host allowlist above
+// is what prevents abuse — so CORS can safely be open. This also lets the
+// site work from preview URLs (githack) and localhost without maintenance.
+function corsHeaders() {
   return {
-    'Access-Control-Allow-Origin': allow,
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Accept',
-    'Vary': 'Origin',
   };
 }
 

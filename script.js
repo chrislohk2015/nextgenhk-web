@@ -108,7 +108,7 @@ document.querySelectorAll('.service-card,.pillar,.insight-card,.stat,.price-boar
 // trailing slash). Once set, it becomes the primary, reliable source and the
 // public proxies below are only used if the Worker is ever unreachable.
 //   e.g. const PRICE_PROXY = 'https://nextgen-prices.yourname.workers.dev';
-const PRICE_PROXY = '';
+const PRICE_PROXY = 'https://purple-snow-4151.chrislohk2015.workers.dev';
 
 // CORS proxies tried in order until one works.
 // On localhost, try the local proxy server first (node proxy.js)
