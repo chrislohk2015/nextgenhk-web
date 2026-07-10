@@ -392,14 +392,13 @@
           </div>
         </div>
       </div>
-      <form class="contact-form" id="contactForm" action="https://formsubmit.co/chrislohk2015@gmail.com" method="POST">
-        <!-- FormSubmit configuration -->
-        <input type="hidden" name="_subject" value="New Enquiry from Nextgen Website" />
-        <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_template" value="table" />
-        <input type="hidden" name="_next" value="https://www.nextgenhk.info/#contact" />
+      <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+        <!-- Web3Forms configuration -->
+        <input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY" />
+        <input type="hidden" name="subject" value="New Enquiry from Nextgen Website" />
+        <input type="hidden" name="from_name" value="Nextgen Website" />
         <!-- Honeypot spam protection -->
-        <input type="text" name="_honey" style="display:none" />
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" />
         <div class="form-row">
           <div class="form-group">
             <label for="name">Full Name</label>

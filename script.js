@@ -362,15 +362,12 @@ applyPrices(SEED);
 fetchPrices();
 setInterval(fetchPrices, 5000);
 
-// ===== FORM (FormSubmit.co) =====
-// Primary path: FormSubmit's /ajax/ endpoint — it supports CORS fetch and
-// returns real JSON success/failure, so we can show honest feedback (the
-// old hidden-iframe method reported "success" no matter what happened,
-// hiding activation notices and errors).
+// ===== FORM (Web3Forms) =====
+// Primary path: Web3Forms JSON API — CORS fetch with a real success/failure
+// response, so the form shows honest feedback. (The previous services'
+// hidden-iframe method reported "success" no matter what happened.)
 // Fallback path: hidden-iframe submit, only if fetch itself cannot run.
-// NOTE: temporarily targeting the founder's Gmail while we debug why
-// FormSubmit deliveries to info@nextgenhk.info are not arriving.
-const FORMSUBMIT_AJAX = 'https://formsubmit.co/ajax/chrislohk2015@gmail.com';
+const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 
 function formStatusEl(form) {
   let el = form.querySelector('.form-status');
@@ -394,7 +391,7 @@ function handleForm(e) {
   // Set dynamic subject
   const name = form.querySelector('#name').value || '';
   const company = form.querySelector('#company').value || '';
-  form.querySelector('[name="_subject"]').value =
+  form.querySelector('[name="subject"]').value =
     `Enquiry from ${name}${company ? ' — ' + company : ''} via Nextgen Website`;
 
   btn.textContent = 'Sending…';
@@ -425,7 +422,7 @@ function handleForm(e) {
     setTimeout(() => { btn.textContent = originalText; }, 6000);
   };
 
-  fetch(FORMSUBMIT_AJAX, {
+  fetch(FORM_ENDPOINT, {
     method: 'POST',
     headers: { 'Accept': 'application/json' },
     body: new FormData(form),
@@ -433,22 +430,22 @@ function handleForm(e) {
     .then(async (res) => {
       let j = null;
       try { j = await res.json(); } catch (_) {}
-      if (res.ok && j && String(j.success) === 'true') {
-        succeed(j.message);
+      if (res.ok && j && (j.success === true || String(j.success) === 'true')) {
+        succeed();
       } else {
-        console.warn('FormSubmit rejected:', res.status, j);
+        console.warn('Form service rejected:', res.status, j);
         fail(j && j.message ? String(j.message) : `Send failed (HTTP ${res.status})`);
       }
     })
     .catch((err) => {
       // fetch/CORS-level failure — fall back to the hidden-iframe submit
-      console.warn('FormSubmit ajax failed, using iframe fallback:', err.message);
+      console.warn('Form fetch failed, using iframe fallback:', err.message);
       iframeSubmit(form, btn, originalText, status);
     });
 }
 
 function iframeSubmit(form, btn, originalText, status) {
-  const iframeName = 'formsubmit_iframe_' + Date.now();
+  const iframeName = 'form_iframe_' + Date.now();
   const iframe = document.createElement('iframe');
   iframe.name = iframeName;
   iframe.style.display = 'none';
