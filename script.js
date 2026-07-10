@@ -126,11 +126,8 @@ const PUBLIC_PROXIES = IS_LOCAL
       (url)  => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
     ];
 
-// Worker (if configured) goes first; public proxies remain as fallback.
-const PROXIES = [
-  ...(PRICE_PROXY ? [(url) => `${PRICE_PROXY}/?u=${encodeURIComponent(url)}`] : []),
-  ...PUBLIC_PROXIES,
-];
+// Legacy HTML-scrape fallback chain (only used if the Worker is unreachable).
+const PROXIES = PUBLIC_PROXIES;
 const WF = 'https://mq1.wfgold.com';
 let proxyIndex = 0;
 
@@ -300,7 +297,28 @@ async function fetchPrices() {
   if (fetchController) fetchController.abort();
   fetchController = new AbortController();
 
-  // Try each proxy in rotation
+  // --- Primary: our Cloudflare Worker's /prices JSON endpoint ---
+  if (PRICE_PROXY) {
+    try {
+      const res = await fetch(`${PRICE_PROXY}/prices?t=${Date.now()}`, {
+        signal: fetchController.signal,
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.LLG && data.LLG.bid) {
+          applyPrices(data);
+          return;
+        }
+      }
+      console.warn('Worker /prices returned no usable data, falling back');
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      console.warn('Worker /prices failed:', err.message);
+    }
+  }
+
+  // --- Fallback: scrape upstream HTML via public CORS proxies ---
   for (let attempt = 0; attempt < PROXIES.length; attempt++) {
     const idx = (proxyIndex + attempt) % PROXIES.length;
     const proxyUrl = PROXIES[idx](`${WF}?t=${Date.now()}`);

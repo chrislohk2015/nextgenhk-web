@@ -1,13 +1,18 @@
-# Live price proxy — Cloudflare Worker
+# Live price Worker — Cloudflare
 
-This tiny Worker fixes the flaky live prices. Instead of the website bouncing
-its requests through public CORS proxies (which are rate-limited and often
-down), it calls **your own** Worker, which fetches the quote page server-side,
-caches it at Cloudflare's edge for ~15 seconds, and returns it with the CORS
-headers the browser needs.
+This Worker gives the website a reliable live price feed. Its `/prices`
+endpoint aggregates real machine-readable market data server-side —
+Swissquote public quotes (dealable bid/ask for XAU/XAG/XPT/XPD) and Stooq
+(day range, previous close, USD/HKD) — caches it at Cloudflare's edge for a
+few seconds, and returns clean JSON with the CORS headers the browser needs.
+Hong Kong 99-tael gold (HKD/tael) is derived from spot × USD/HKD × 1.20337
+oz/tael × 0.99 fineness and labelled as derived on the site.
 
-It is **host-allowlisted** — it will only fetch the upstream(s) listed in
-`price-proxy.js`, so it cannot be abused as a general open proxy.
+(Scraping the old quote webpage doesn't work: its prices are rendered by
+client-side scripts, so the raw HTML contains no numbers.)
+
+Upstream fetching is **host-allowlisted** — the Worker only talks to the data
+sources listed in `price-proxy.js`, so it cannot be abused as an open proxy.
 
 Cost: **free**. Cloudflare's Workers free plan (100,000 requests/day) is far
 more than this site will ever use, even refreshing every 5 seconds.
@@ -50,11 +55,11 @@ Then set `PRICE_PROXY` in `script.js` to the URL Wrangler prints.
 
 ## How to verify it works
 
-Open this in a browser (replace with your Worker URL) — you should see the raw
-WF Gold quote HTML, **not** a CORS error:
+Open this in a browser (replace with your Worker URL) — you should see JSON
+with bid/ask/high/low/close for LLG, HKG, LLS, PT, PD and UST/T:
 
 ```
-https://nextgen-prices.YOURNAME.workers.dev/?u=https%3A%2F%2Fmq1.wfgold.com
+https://nextgen-prices.YOURNAME.workers.dev/prices
 ```
 
 On the live site, the price board's status pill should read **● Live** and the
