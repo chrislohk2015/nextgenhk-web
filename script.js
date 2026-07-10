@@ -103,10 +103,17 @@ document.querySelectorAll('.service-card,.pillar,.insight-card,.stat,.price-boar
 // Prices are in HKD (港金 HKG) and USD (倫敦金 LLG)
 // We scrape the rendered page via a CORS proxy every 5 seconds.
 
-// CORS proxies tried in order until one works
+// --- PREFERRED: your own Cloudflare Worker proxy ---------------------------
+// Deploy the Worker in /cloudflare-worker, then paste its URL here (no
+// trailing slash). Once set, it becomes the primary, reliable source and the
+// public proxies below are only used if the Worker is ever unreachable.
+//   e.g. const PRICE_PROXY = 'https://nextgen-prices.yourname.workers.dev';
+const PRICE_PROXY = '';
+
+// CORS proxies tried in order until one works.
 // On localhost, try the local proxy server first (node proxy.js)
 const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-const PROXIES = IS_LOCAL
+const PUBLIC_PROXIES = IS_LOCAL
   ? [
       (_url) => `http://localhost:8900/wfgold`,          // local node proxy (run: node proxy.js)
       (url)  => `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -118,6 +125,12 @@ const PROXIES = IS_LOCAL
       (url)  => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
       (url)  => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
     ];
+
+// Worker (if configured) goes first; public proxies remain as fallback.
+const PROXIES = [
+  ...(PRICE_PROXY ? [(url) => `${PRICE_PROXY}/?u=${encodeURIComponent(url)}`] : []),
+  ...PUBLIC_PROXIES,
+];
 const WF = 'https://mq1.wfgold.com';
 let proxyIndex = 0;
 
