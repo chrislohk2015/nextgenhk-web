@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /vendor/
+Disallow: /cloudflare-worker/
+
+Sitemap: https://www.nextgenhk.info/sitemap.xml

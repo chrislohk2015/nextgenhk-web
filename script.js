@@ -131,15 +131,8 @@ const PROXIES = PUBLIC_PROXIES;
 const WF = 'https://mq1.wfgold.com';
 let proxyIndex = 0;
 
-// Seed with latest real prices from WF Gold (fallback when proxies unavailable)
-const SEED = {
-  LLG:     { bid:'4,737.3', ask:'4,738.8', high:'4,752.9', low:'4,684.1', close:'4,739.0' },
-  HKG:     { bid:'44,078',  ask:'44,093',  high:'44,224',  low:'43,585',  close:'44,094'  },
-  LLS:     { bid:'76.705',  ask:'76.905',  high:'78.365',  low:'74.190',  close:'77.635'  },
-  PT:      { bid:'2,028.7', ask:'2,043.7', high:'2,080.5', low:'1,996.3', close:'2,071.5' },
-  PD:      { bid:'1,489.0', ask:'1,504.0', high:'1,546.5', low:'1,462.0', close:'1,543.0' },
-  'UST/T': { bid:'7.8327',  ask:'7.8332',  high:'7.8338',  low:'7.8309',  close:'7.8328'  },
-};
+// NOTE: no hard-coded seed prices — the board shows "—" until live data
+// arrives. Displaying stale numbers would be misleading for a bullion desk.
 
 // Maps the WF code → our DOM field IDs
 const FIELDS = {
@@ -357,8 +350,7 @@ async function fetchPrices() {
   if (st) st.innerHTML = '<span class="status-dot" style="background:var(--down)"></span> Offline';
 }
 
-// Kick off immediately with seed data, then fetch live
-applyPrices(SEED);
+// Fetch live prices now, then keep refreshing
 fetchPrices();
 setInterval(fetchPrices, 5000);
 
