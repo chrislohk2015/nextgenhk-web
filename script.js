@@ -368,7 +368,9 @@ setInterval(fetchPrices, 5000);
 // old hidden-iframe method reported "success" no matter what happened,
 // hiding activation notices and errors).
 // Fallback path: hidden-iframe submit, only if fetch itself cannot run.
-const FORMSUBMIT_AJAX = 'https://formsubmit.co/ajax/info@nextgenhk.info';
+// NOTE: temporarily targeting the founder's Gmail while we debug why
+// FormSubmit deliveries to info@nextgenhk.info are not arriving.
+const FORMSUBMIT_AJAX = 'https://formsubmit.co/ajax/chrislohk2015@gmail.com';
 
 function formStatusEl(form) {
   let el = form.querySelector('.form-status');
