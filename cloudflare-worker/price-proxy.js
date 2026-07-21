@@ -63,7 +63,8 @@ function json(obj, status = 200) {
   });
 }
 
-const UA = 'NextgenPriceWorker/2.0 (+https://www.nextgenhk.info)';
+// Some upstreams (notably Yahoo) reject obviously non-browser user agents.
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
 
 async function fetchText(url, cacheTtl) {
   const res = await fetch(url, {
@@ -208,20 +209,32 @@ async function handlePrices() {
   const codes = Object.keys(INSTRUMENTS);
   const stooqSyms = codes.map(c => INSTRUMENTS[c].stooq);
 
+  // Per-upstream outcome map, reported in _meta.sources for diagnosis.
+  // 'ok' = fetched and parsed; 'parse-null' = fetched but no usable data;
+  // anything else = the fetch error (HTTP status etc.).
+  const src = {};
+  const grab = (tag, url, ttl, parse) =>
+    fetchText(url, ttl)
+      .then((body) => {
+        const parsed = parse(body);
+        src[tag] = (parsed === null || (typeof parsed === 'object' && Object.keys(parsed).length === 0))
+          ? 'parse-null' : 'ok';
+        return parsed;
+      })
+      .catch((e) => { src[tag] = String(e.message || e).slice(0, 60); return null; });
+
   // Tier 1 (parallel): Swissquote bid/ask + Stooq quotes/history.
-  const lightP = fetchText(
+  const lightP = grab('stooq-light',
     `https://stooq.com/q/l/?s=${stooqSyms.join('+')}&f=sd2t2ohlcv&h&e=csv`,
-    QUOTE_CACHE_SECONDS
-  ).then(parseStooqLight).catch(() => ({}));
+    QUOTE_CACHE_SECONDS, parseStooqLight).then(r => r || {});
 
   const sqP = {};
   for (const c of codes) {
     const inst = INSTRUMENTS[c];
     sqP[c] = inst.sq
-      ? fetchText(
+      ? grab('sq:' + c,
           `https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/${inst.sq}`,
-          QUOTE_CACHE_SECONDS
-        ).then(parseSwissquote).catch(() => null)
+          QUOTE_CACHE_SECONDS, parseSwissquote)
       : Promise.resolve(null);
   }
 
@@ -230,10 +243,9 @@ async function handlePrices() {
   const d1 = new Date(now.getTime() - 10 * 86400e3).toISOString().slice(0, 10).replace(/-/g, '');
   const histP = {};
   for (const c of codes) {
-    histP[c] = fetchText(
+    histP[c] = grab('hist:' + INSTRUMENTS[c].stooq,
       `https://stooq.com/q/d/l/?s=${INSTRUMENTS[c].stooq}&i=d&d1=${d1}&d2=${d2}`,
-      HISTORY_CACHE_SECONDS
-    ).catch(() => null);
+      HISTORY_CACHE_SECONDS, (t) => t);
   }
 
   const light = await lightP;
@@ -246,14 +258,13 @@ async function handlePrices() {
     const st = light[inst.stooq];
     const needYahoo = !st || st.high === null || st.low === null || !st.last;
     yaP[c] = (needYahoo && inst.yahoo)
-      ? fetchText(
-          `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(inst.yahoo)}?range=1d&interval=1d`,
-          QUOTE_CACHE_SECONDS
-        ).then(parseYahoo).catch(() => null)
+      ? grab('yahoo:' + inst.yahoo,
+          `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(inst.yahoo)}?range=5d&interval=1d`,
+          QUOTE_CACHE_SECONDS, parseYahoo)
       : Promise.resolve(null);
   }
 
-  const out = { _meta: { ts: now.toISOString(), source: 'swissquote+stooq+yahoo' } };
+  const out = { _meta: { ts: now.toISOString(), source: 'swissquote+stooq+yahoo', sources: src } };
 
   for (const c of codes) {
     const inst = INSTRUMENTS[c];
@@ -268,8 +279,8 @@ async function handlePrices() {
   // Tier 3: if USD/HKD still has no price, use open.er-api.com's daily rate
   // (HKD is pegged to USD, so a daily mid is fine for the derivation).
   if (!out['UST/T'] || out['UST/T'].bid === undefined) {
-    const rate = await fetchText('https://open.er-api.com/v6/latest/USD', HISTORY_CACHE_SECONDS)
-      .then(parseErApi).catch(() => null);
+    const rate = await grab('erapi', 'https://open.er-api.com/v6/latest/USD',
+      HISTORY_CACHE_SECONDS, parseErApi);
     if (rate !== null) {
       out['UST/T'] = { ...(out['UST/T'] || {}), bid: rate.toFixed(4), ask: rate.toFixed(4) };
     }

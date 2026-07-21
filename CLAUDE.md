@@ -76,8 +76,10 @@ step, no framework.
   of truth; remind the owner to re-paste after editing it.
 - Worker is host-allowlisted (not an open proxy); CORS `*` (public data).
   Also keeps a legacy `/?u=` relay for debugging.
-- Testing: unit-test parse/merge logic in Node with mocked `fetch` (see git
-  history `/tmp/test-worker*.mjs` pattern — Request/Response exist in Node 22).
+- `_meta.sources` in the /prices response reports each upstream's outcome
+  ('ok' / 'parse-null' / error) — first thing to check when columns go blank.
+- Testing: `node cloudflare-worker/test/test-worker.mjs` (and `test-worker2.mjs`)
+  — unit tests with mocked `fetch`, runnable offline in Node 22.
 
 ## Contact form
 
