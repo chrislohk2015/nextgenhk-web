@@ -31,13 +31,17 @@ const ALLOWED_HOSTS = new Set([
 const QUOTE_CACHE_SECONDS = 10;    // edge cache for live quotes
 const HISTORY_CACHE_SECONDS = 3600; // edge cache for previous-close lookups
 
-// Instrument map: site code → sources + decimals
+// Instrument map: site code → sources + decimals.
+// Yahoo's chart API 404s on spot metal symbols (XAUUSD=X etc.) but serves
+// the front-month futures (GC=F, SI=F, PL=F, PA=F). Futures carry a small
+// premium over spot, so `scale: true` re-anchors their high/low/prevClose
+// to the live Swissquote spot mid before use (percent moves are ~identical).
 const INSTRUMENTS = {
-  'LLG':   { stooq: 'xauusd', sq: 'XAU/USD', yahoo: 'XAUUSD=X', dp: 1 },
-  'LLS':   { stooq: 'xagusd', sq: 'XAG/USD', yahoo: 'XAGUSD=X', dp: 3 },
-  'PT':    { stooq: 'xptusd', sq: 'XPT/USD', yahoo: 'XPTUSD=X', dp: 1 },
-  'PD':    { stooq: 'xpdusd', sq: 'XPD/USD', yahoo: 'XPDUSD=X', dp: 1 },
-  'UST/T': { stooq: 'usdhkd', sq: null,      yahoo: 'HKD=X',    dp: 4 },
+  'LLG':   { stooq: 'xauusd', sq: 'XAU/USD', yahoo: 'GC=F',  scale: true, dp: 1 },
+  'LLS':   { stooq: 'xagusd', sq: 'XAG/USD', yahoo: 'SI=F',  scale: true, dp: 3 },
+  'PT':    { stooq: 'xptusd', sq: 'XPT/USD', yahoo: 'PL=F',  scale: true, dp: 1 },
+  'PD':    { stooq: 'xpdusd', sq: 'XPD/USD', yahoo: 'PA=F',  scale: true, dp: 1 },
+  'UST/T': { stooq: 'usdhkd', sq: null,      yahoo: 'HKD=X',              dp: 4 },
 };
 
 // HK 99-tael gold derivation constants
@@ -167,13 +171,26 @@ const fix = (n, dp) => (n === null || n === undefined || isNaN(n)) ? undefined :
 
 /* Build one instrument's payload from its sources (all optional).
  * Priority: Swissquote bid/ask > Stooq last > Yahoo last;
- *           Stooq range/close > Yahoo range/prevClose. */
-export function buildInstrument({ sq, st, ya, prevClose, dp }) {
+ *           Stooq range/close > Yahoo range/prevClose.
+ * `scale`: Yahoo data is futures — re-anchor it to the Swissquote spot mid
+ * so the Change/Range columns are consistent with the displayed bid/ask. */
+export function buildInstrument({ sq, st, ya, prevClose, dp, scale }) {
   const o = {};
   const pick = (...vals) => {
     for (const v of vals) if (v !== null && v !== undefined && !isNaN(v)) return v;
     return null;
   };
+  if (scale && sq && ya && ya.last) {
+    const k = ((sq.bid + sq.ask) / 2) / ya.last;
+    if (isFinite(k) && k > 0) {
+      ya = {
+        last: ya.last * k,
+        high: ya.high !== null ? ya.high * k : null,
+        low: ya.low !== null ? ya.low * k : null,
+        prevClose: ya.prevClose !== null ? ya.prevClose * k : null,
+      };
+    }
+  }
   const bid = pick(sq && sq.bid, st && st.last, ya && ya.last);
   const ask = pick(sq && sq.ask, st && st.last, ya && ya.last);
   const high = pick(st && st.high, ya && ya.high);
@@ -243,9 +260,11 @@ async function handlePrices() {
   const d1 = new Date(now.getTime() - 10 * 86400e3).toISOString().slice(0, 10).replace(/-/g, '');
   const histP = {};
   for (const c of codes) {
+    // Validate the CSV header — Stooq answers 200 with a rate-limit message
+    // when it refuses, which must count as parse-null, not ok.
     histP[c] = grab('hist:' + INSTRUMENTS[c].stooq,
       `https://stooq.com/q/d/l/?s=${INSTRUMENTS[c].stooq}&i=d&d1=${d1}&d2=${d2}`,
-      HISTORY_CACHE_SECONDS, (t) => t);
+      HISTORY_CACHE_SECONDS, (t) => (/^Date,Open,High,Low,Close/i.test(String(t).trim()) ? t : null));
   }
 
   const light = await lightP;
@@ -273,7 +292,7 @@ async function handlePrices() {
     const ya = await yaP[c];
     const histCsv = await histP[c];
     const prevClose = histCsv ? parsePrevClose(histCsv, st ? st.date : null) : null;
-    out[c] = buildInstrument({ sq, st, ya, prevClose, dp: inst.dp });
+    out[c] = buildInstrument({ sq, st, ya, prevClose, dp: inst.dp, scale: inst.scale });
   }
 
   // Tier 3: if USD/HKD still has no price, use open.er-api.com's daily rate

@@ -7,12 +7,13 @@ const YA = (last, high, low, prev) => JSON.stringify({
     regularMarketDayLow: low, chartPreviousClose: prev,
   }}]},
 });
+// Futures values = 2x spot so the scale factor k is exactly 0.5
 const YAS = {
-  'XAUUSD=X': YA(4104.2, 4118.9, 4085.3, 4110.5),
-  'XAGUSD=X': YA(59.50, 60.10, 58.90, 59.80),
-  'XPTUSD=X': YA(1619.0, 1630.0, 1600.0, 1625.5),
-  'XPDUSD=X': YA(1272.0, 1280.0, 1260.0, 1278.0),
-  'HKD=X':    YA(7.8391, 7.8402, 7.8375, 7.8388),
+  'GC=F':  YA(8208.4, 8237.8, 8170.6, 8221.0),
+  'SI=F':  YA(118.993, 120.20, 117.80, 119.60),
+  'PL=F':  YA(3239.5, 3260.0, 3200.0, 3251.0),
+  'PA=F':  YA(2544.3, 2560.0, 2520.0, 2556.0),
+  'HKD=X': YA(7.8391, 7.8402, 7.8375, 7.8388),
 };
 const SQ = (bid, ask) => JSON.stringify([
   { spreadProfilePrices: [{ spreadProfile: 'Prime', bid, ask }] },
@@ -27,11 +28,13 @@ const ER = JSON.stringify({ result: 'success', rates: { HKD: 7.8392 } });
 
 const assert = (cond, msg) => { if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; } else console.log('ok:', msg); };
 
-assert(parseYahoo(YAS['XAUUSD=X']).prevClose === 4110.5, 'yahoo parse prevClose');
+assert(parseYahoo(YAS['GC=F']).prevClose === 8221.0, 'yahoo parse prevClose');
 assert(parseYahoo('<html>') === null, 'yahoo garbage → null');
 assert(parseErApi(ER) === 7.8392, 'er-api parse');
 const merged = buildInstrument({ sq: { bid: 1, ask: 2 }, st: null, ya: { last: 9, high: 3, low: 0.5, prevClose: 4 }, prevClose: null, dp: 1 });
-assert(merged.bid === '1.0' && merged.high === '3.0' && merged.close === '4.0', 'merge sq bid + yahoo range/close');
+assert(merged.bid === '1.0' && merged.high === '3.0' && merged.close === '4.0', 'merge sq bid + yahoo range/close (no scale)');
+const scaled = buildInstrument({ sq: { bid: 99, ask: 101 }, st: null, ya: { last: 200, high: 220, low: 180, prevClose: 210 }, prevClose: null, dp: 1, scale: true });
+assert(scaled.high === '110.0' && scaled.low === '90.0' && scaled.close === '105.0', 'futures scaled to spot mid (k=0.5)');
 
 function mockFetch({ stooqDown = false, yahooDown = false, sqDown = false, erDown = false }) {
   return async (url) => {
@@ -55,12 +58,12 @@ globalThis.fetch = mockFetch({ stooqDown: true });
 let res = await worker.fetch(new Request('https://w/prices'));
 let d = await res.json();
 assert(d.LLG.bid === '4103.9' && d.LLG.ask === '4104.5', 'bid/ask still swissquote');
-assert(d.LLG.high === '4118.9' && d.LLG.low === '4085.3', 'range from yahoo');
-assert(d.LLG.close === '4110.5', 'prev close from yahoo');
+assert(d.LLG.high === '4118.9' && d.LLG.low === '4085.3', 'range from yahoo futures scaled to spot (k=0.5)');
+assert(d.LLG.close === '4110.5', 'prev close from yahoo futures scaled');
 assert(d['UST/T'].bid === '7.8391', 'fx from yahoo');
 assert(d.HKG.bid !== undefined && parseFloat(d.HKG.bid) > 37000 && parseFloat(d.HKG.bid) < 40000, `HKG derived (${d.HKG.bid})`);
 assert(/403/.test(d._meta.sources['stooq-light']), 'sources reports stooq 403');
-assert(d._meta.sources['yahoo:XAUUSD=X'] === 'ok', 'sources reports yahoo ok');
+assert(d._meta.sources['yahoo:GC=F'] === 'ok', 'sources reports yahoo ok');
 
 globalThis.fetch = mockFetch({ stooqDown: true, yahooDown: true });
 res = await worker.fetch(new Request('https://w/prices'));

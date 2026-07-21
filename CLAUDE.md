@@ -64,7 +64,12 @@ step, no framework.
   bid/ask: Swissquote public quotes → Stooq last → Yahoo last;
   high/low/prevClose: Stooq → Yahoo chart meta;
   USD/HKD: Stooq → Yahoo `HKD=X` → open.er-api.com daily.
-  **Known:** Stooq usually refuses Cloudflare egress IPs → Yahoo does the work.
+  **Known (verified live 2026-07-21):** Stooq 404s/rate-limits Cloudflare
+  egress → dead in practice. Yahoo chart API 404s spot metal symbols
+  (`XAUUSD=X` etc.) but serves futures `GC=F/SI=F/PL=F/PA=F` — the Worker
+  fetches those and re-anchors high/low/prevClose to the Swissquote spot
+  mid (`scale: true` in INSTRUMENTS) so Change/Range match displayed
+  bid/ask. `HKD=X` works directly.
 - **HKG (HK 99-tael gold, HKD/tael) is derived**: XAU/USD × USD/HKD × 1.20337
   oz/tael × 0.99 fineness — labelled "derived from spot" in the UI (real CGSE
   quotes carry a local premium; derivation lands within ~0.3%).
